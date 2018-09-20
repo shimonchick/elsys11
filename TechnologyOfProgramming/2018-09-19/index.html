@@ -1,0 +1,30 @@
+<html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+$(document).ready(function() {
+	//alert('DOM loaded');
+	$('#btnAddItem').prop('value', 'Add new Item');
+	$('#btnAddItem').click(function() {
+	    var itemId = $('#txtItem').val();
+		var item = $("<li/>", { text: itemId,
+						      id: '_'+ itemId});
+		
+		var remove = $("<a id=\""+itemId+ "\"href=\"#\">remove</a>");
+		$(remove).click(function() {
+			$('#_'+itemId).remove();
+		});
+		
+		item.append("&nbsp;");
+		item.append(remove);
+		$('#list').append(item);
+	});
+});
+</script>
+<body>
+	<div id="items">
+		<ul id="list"/>
+	</div>
+	<div><input type="text" id="txtItem"/><input type="button" id="btnAddItem" value="Add Item"></div>
+	<div></div>
+</body>
+</html>
