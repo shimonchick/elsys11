@@ -1,0 +1,21 @@
+<html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+var object = {};
+
+object["key"] = "value"
+object["key"] = "value1";
+object["innerobject"] = {}
+object["innerobject"]["innerkey"] = "innervalue"
+
+delete object["innerobject"]
+alert(JSON.stringify(object))
+</script>
+<body>
+	<div id="items">
+		<ul id="list"/>
+	</div>
+	<div><input type="text" id="txtItem"/><input type="button" id="btnAddItem" value="Add Item"></div>
+	<div></div>
+</body>
+</html>
