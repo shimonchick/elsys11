@@ -1,0 +1,2 @@
+all:
+	gcc strlen.c
