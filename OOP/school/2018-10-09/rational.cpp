@@ -42,7 +42,7 @@ class Rational{
         }
 
     Rational add(Rational r1, Rational r2){
-        Rational r3(0, 1);
+        Rational r3(0xX, 1);
         r3.add(r1);
         r3.add(r2);
         return r3;
