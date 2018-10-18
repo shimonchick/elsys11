@@ -37,10 +37,10 @@ int main(){
     Point point(3, 5);
 
     point.set_x(11).set_y(11);
-
-    Point& point2 = point.set_x(4);
-    point2.set_x(6);
-    cout<< point2.get_x() << endl;
     cout << point.get_x() << " , " << point.get_y();
+    //Point& point2 = point.set_x(4);
+    //point2.set_x(6);
+    //cout<< point2.get_x() << endl;
+    //cout << point.get_x() << " , " << point.get_y();
     return 0;
 }
