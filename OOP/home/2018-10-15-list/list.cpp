@@ -19,6 +19,7 @@ class List{
         Node* head;
         Node* tail;
         size_t size;
+         Iter iter;
         List(): head(NULL), tail(NULL), size(0){}
         List(const List& other){
             List();
@@ -97,10 +98,43 @@ class List{
             clear();
         }
 
-};
+        class Iter{
+            private:
+                Node* address;
+                T element;
+                int id;
+            public:
 
-class iterator{
+                Iter(Node* addr): element(addr->data), address(addr){}
+                Iter begin(){
+                    return Iter(head);
+                }
+                Iter end(){
+                    return Iter(tail);
+                }
+                void operator++(){
+                    if(address->next){
+                        address = address->next;
+                        element = address->data;
+                    }
+                }
+                void operator--(){
+                    if(address->prev){
+                        address = address->prev;
+                        element = address->data;
+                    }
+                }
+                bool operator!=(const Iter& other){
+                    return this!= &other;
+                }
+                bool operator==(const Iter& other){
+                    return this == &other;
+                }
+                T operator*(){
+                    return element;
+                }
 
+        };
 };
 
 
