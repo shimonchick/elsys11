@@ -19,7 +19,7 @@ class List{
     public:
         Node* head;
         Node* tail;
-        size_t size;
+        int size;
         List(): head(NULL), tail(NULL), size(0){}
         List(const List& other){
             List();
@@ -50,7 +50,7 @@ class List{
             else{
                 tail->next = temp;
                 temp->prev = tail;
-                temp->next = NULL;
+                temp->next = 0;
                 tail = temp;
                 size++;
             }
@@ -74,7 +74,7 @@ class List{
                 }
                 delete current;
 
-                size --;
+                size--;
                 
 
                 return result;
@@ -94,6 +94,9 @@ class List{
                 pop_back();
             }
         }
+        int length(){
+            return size;
+        }
         ~List(){
             clear();
         }
@@ -102,10 +105,9 @@ class List{
             friend class List; // so we can call private constructor
             private:
                 Node* current;
-                iterator(Node* node) : current(node) {}
+                iterator(Node* node = NULL) : current(node) {}
 
             public:
-                iterator() : current(nullptr){}
                 T& operator*(){
                     return current->data;
                 }
@@ -116,8 +118,8 @@ class List{
                 }
                 iterator operator++(int){ //it++ increments, but returns the operator before incrementing
                     iterator result(current);
-
-                    current = current-> next;
+                    
+                    current = current->next;
                     
                     return result;
                 }
@@ -127,15 +129,15 @@ class List{
                 }
                 iterator operator--(int){
                     iterator result(current);
-                    current = current->prev;
+                    current=current->prev;
                     return result;
                 }
 
                 bool operator==(const iterator& other){
-                    return current == other.current;
+                    return this->current == other.current;
                 }
-                bool operator !=(const iterator& other){
-                    return ! operator==(other);
+                bool operator!=(const iterator& other){
+                    return this->current != other.current;
                 }
 
         }; // iterator end
@@ -184,13 +186,13 @@ class List{
             return iterator(head);
         }
         iterator end(){
-            return iterator(tail + 1);
+            return iterator(NULL);
         }
         reverse_iterator rend(){
-            return reverse_iterator(tail);
+            return reverse_iterator(NULL);
         }
         reverse_iterator rbegin(){
-            return reverse_iterator(head);
+            return reverse_iterator(tail);
         }
 
 };
@@ -201,22 +203,29 @@ int main(){
     l1.push_back(10);
     l1.push_back(20);
     l1.push_back(32);
-    cout << l1.back() << endl;
+    //cout << l1.back() << endl;
+    //while(!l1.empty()){
+    //    cout << "last element: " << l1.pop_back() << "size: " << l1.length() << endl;
+    //}
+ //   List<int>::iterator it = l1.begin();
+ //   cout << "*it = " << *it << endl;
+ //   *it = 18;
+ //   ++it;
+ //   cout << "*it =" << *it << endl;
 
-    List<int>::iterator it = l1.begin();
-    cout << "*it = " << *it << endl;
-    *it = 18;
-    ++it;
-    cout << "*it =" << *it << endl;
+ //   int v2 = *(it++);
+ //   cout << "v2 =" << v2 << endl;
 
-    int v2 = *(it++);
-    cout << "v2 =" << v2 << endl;
-
-    if(it == l1.end()){
-        cout << "End of list" << endl;
-    }
-    for(List<int>::iterator it1 = l1.begin(); it1 != l1.end(); ++it1){
+ //   if(it == l1.end()){
+ //       cout << "End of list" << endl;
+ //   }
+    for(List<int>::iterator it1 = l1.begin(); it1 != l1.end(); it1++){
         cout << *it1 << endl;
+       // bool equals = it1 == l1.end();
+       // cout <<&*it1 << "equals?: " << equals<< endl;
+    }
+    for(List<int>::reverse_iterator it = l1.rbegin();it != l1.rend();it++){
+        cout << *it << endl;
     }
 /*    for(List<int>::reverse_iterator it2 = l1.rend(); it2 != l1.rbegin(); ++it2){
         cout << *it2 << endl;
