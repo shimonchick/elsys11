@@ -1,4 +1,5 @@
 
+
 #include <iostream>
 
 using namespace std;
@@ -157,10 +158,50 @@ class List{
                     return this->current == other.current;
                 }
                 bool operator!=(const iterator& other){
-                    return this->current != other.current;
+                    return ! operator==(other);
                 }
 
         }; // iterator end
+        class const_iterator{
+            friend class List; // so we can call private constructor
+            private:
+                Node* current;
+                const_iterator(Node* node = NULL) : current(node) {}
+
+            public:
+                const T& operator*(){
+                    return current->data;
+                }
+                
+                const_iterator& operator++(){ // ++it
+                    current = current->next;
+                    return *this;
+                }
+                const_iterator operator++(int){ //it++ increments, but returns the operator before incrementing
+                    const_iterator result(current);
+                    
+                    current = current->next;
+                    
+                    return result;
+                }
+                const_iterator& operator--(){ // --it 
+                    current = current->prev;
+                    return *this;
+                }
+                const_iterator operator--(int){
+                    const_iterator result(current);
+                    current=current->prev;
+                    return result;
+                }
+
+                bool operator==(const const_iterator& other){
+                    return this->current == other.current;
+                }
+                bool operator!=(const const_iterator& other){
+                    return this->current != other.current;
+                }
+
+        }; // const_iterator end
         class reverse_iterator{
             friend class List; // so we can call private constructor
             private:
@@ -202,16 +243,22 @@ class List{
                 }
         }; //reverse iterator end
 
-        iterator begin(){
+        iterator begin() {
             return iterator(head);
         }
-        iterator end(){
+        iterator end() {
             return iterator(NULL);
         }
-        reverse_iterator rend(){
+        const_iterator begin() const{
+            return const_iterator(head);
+        }
+        const_iterator end() const{
+            return const_iterator(NULL);
+        }
+        reverse_iterator rend() const{
             return reverse_iterator(NULL);
         }
-        reverse_iterator rbegin(){
+        reverse_iterator rbegin() const{
             return reverse_iterator(tail);
         }
 
@@ -223,33 +270,11 @@ int main(){
     l1.push_back(10);
     l1.push_back(20);
     l1.push_back(32);
-    //cout << l1.back() << endl;
-    //while(!l1.empty()){
-    //    cout << "last element: " << l1.pop_back() << "size: " << l1.length() << endl;
-    //}
- //   List<int>::iterator it = l1.begin();
- //   cout << "*it = " << *it << endl;
- //   *it = 18;
- //   ++it;
- //   cout << "*it =" << *it << endl;
-
- //   int v2 = *(it++);
- //   cout << "v2 =" << v2 << endl;
-
- //   if(it == l1.end()){
- //       cout << "End of list" << endl;
- //   }
-    for(List<int>::iterator it1 = l1.begin(); it1 != l1.end(); it1++){
-        cout << *it1 << endl;
-       // bool equals = it1 == l1.end();
-       // cout <<&*it1 << "equals?: " << equals<< endl;
-    }
-    for(List<int>::reverse_iterator it = l1.rbegin();it != l1.rend();it++){
+    const List<int>& cl = l1;
+    for(List<int>::const_iterator it = cl.begin(); it != cl.end(); it++){
+       // *it = 333;
         cout << *it << endl;
     }
-/*    for(List<int>::reverse_iterator it2 = l1.rend(); it2 != l1.rbegin(); ++it2){
-        cout << *it2 << endl;
-    } */
     return 0;
 
 }
