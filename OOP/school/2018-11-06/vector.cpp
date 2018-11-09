@@ -62,6 +62,7 @@ class Vector{
             if(size_ == capacity_){
                 if(capacity_ == 0){
                     capacity_ = 1;
+                    resize(capacity_);
                 }
                 else{
                     capacity_ *= 2;
@@ -132,6 +133,11 @@ class Vector{
                     ++pos;
                     return result;    
                 }
+                iterator operator--(){ // --it
+                    iterator result(pos, vector);
+                    --pos;
+                    return result;
+                }
                 bool operator==(const iterator& other) const{
                     return this->pos == other.pos;
                 }
@@ -151,10 +157,10 @@ class Vector{
             friend class Vector;
             private:
                 int pos;
-                Vector<T>* vector;
+                const Vector<T>* vector;
                 const_iterator() : pos(0){}
             public:
-                const_iterator(int position, Vector<T>* vector_param) : pos(position), vector(vector_param){}
+                const_iterator(int position, const Vector<T>* vector_param) : pos(position), vector(vector_param){}
                 
                 const_iterator& operator++(){ // ++it
                     
@@ -167,17 +173,22 @@ class Vector{
                     ++pos;
                     return result;    
                 }
+                const_iterator operator--(){ // --it
+                    const_iterator result(pos, vector);
+                    --pos;
+                    return result;
+                }
                 bool operator==(const const_iterator& other) const{
-                    return this->pos == other.pos && this->current == other.current;
+                    return this->pos == other.pos;
                 }
                 bool operator!=(const const_iterator& other) const{
                     return ! operator==(other);
                 }
                 const T& operator*(){
-                    return data[pos];
+                    return vector->data[pos];
                 }
                 const T* operator->(){
-                    return data[pos];
+                    return vector->data[pos];
                 }
                 
 
@@ -207,6 +218,12 @@ class Vector{
                     --pos;
                     return result;    
                 }
+                reverse_iterator operator--(){ // --it
+                    reverse_iterator result(pos, vector);
+                    ++pos;
+                    return result;
+                }
+                
                 bool operator==(const reverse_iterator& other) const{
                     return this->pos == other.pos;
                 }
@@ -260,6 +277,12 @@ class Vector{
                     return vector->data[pos];
                 }
                 
+                const_reverse_iterator operator--(){ // --it
+                    const_reverse_iterator result(pos, vector);
+                    ++pos;
+                    return result;
+                }
+                
 
         }; // reverse_iterator end;
         
@@ -298,12 +321,14 @@ class Vector{
                 *it2 = *it1;
             }
             *it2 = x;
-            return iterator(0);
+            return iterator(0, this);
         }
         iterator erase(iterator pos){
             for(iterator it1 = pos, it2 = ++pos; it2 != end(); it1++, it2++){
                 *it2 = *it1;
             }
+            size_--;
+
             return begin();
         }
         iterator erase(iterator first, iterator last){
@@ -318,9 +343,14 @@ class Vector{
 
 int main(int argc, char* argv[]){
     Vector<int> v1, v2;
+    //cout << atoi(argv[1]) << " " << atoi(argv[2]) << " " << atoi(argv[3]) << " " << atoi(argv[4]) << endl;
+
     for(int i = atoi(argv[1]); i< atoi(argv[2]); i++){
         v1.push_back(i);
     }
+    //for(int i = 0; i< v1.size(); i++){
+    //    cout << v1[i] << " ";
+    //}
     for(int i = atoi(argv[3]); i < atoi(argv[4]); i++){
         v2.push_back(i);
     }
@@ -339,6 +369,12 @@ int main(int argc, char* argv[]){
             }
         }
     }
+    
+    cout << endl;
+    const Vector<int> v3 = v1;
+    for(Vector<int>::const_iterator it = v3.begin(); it != v3.end(); it++){
+        cout << *it << " ";
+    }
     v1.push_back(-100);
     v2.push_back(-100);
     for(Vector<int>::iterator it = v1.begin(); it != v1.end(); it++){
@@ -351,12 +387,20 @@ int main(int argc, char* argv[]){
     cout << endl;
     Vector<int> v = v2;
     for(Vector<int>::reverse_iterator it = v1.rbegin(); it != v1.rend(); it++){
-        v.insert(Vector<int>::iterator(0), *it);
+        cout << *it << " ";
+        v.insert(Vector<int>::iterator(0, &v), *it);
     }
+    cout << endl << "V start: ";
+    for(Vector<int>::iterator it = v.begin(); it != v.end(); it++){
+        cout << *it << " ";
+    }
+    cout << endl;
     Vector<int>::iterator bit = v.begin();
     while(*bit != -100){
+        cout << *bit << " ";
         bit++;
     }
+    cout << endl;
     v.erase(bit);
     for(Vector<int>::iterator it = v.begin(); it != v.end(); it++){
         cout << *it << " ";
