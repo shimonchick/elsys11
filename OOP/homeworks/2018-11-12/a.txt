@@ -1,0 +1,12 @@
+1 2 3 4; 100 300 2302; 1; 2000 3000 2 3
+ordered:true.show
+ordered:false.show
+averages
+medians
+sizes
+sums
+mul:2.ordered:true.show.averages
+size
+begin.ordered:true.show
+begin.next.next.next.next.ordered:false.average.median.sum.size.show
+quit
