@@ -6,12 +6,16 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "-g", "listofarrays.cpp"
+                "-g",
+                "listofarrays.cpp"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
         }
     ]
 }

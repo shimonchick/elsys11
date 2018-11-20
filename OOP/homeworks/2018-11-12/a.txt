@@ -1,12 +1,16 @@
 1 2 3 4; 100 300 2302; 1; 2000 3000 2 3
-ordered:true.show
-ordered:false.show
-averages
-medians
+mul:2.ordered:true.show.averages.medians.sizes.sums   
+begin.next.next.next.next.ordered:true.show   
+averages  
 sizes
 sums
-mul:2.ordered:true.show.averages
+show
+medians
 size
-begin.ordered:true.show
-begin.next.next.next.next.ordered:false.average.median.sum.size.show
+averages.sizes.sums.medians.size
+begin.size.at:1
+begin.at:5
+add:2.ordered:false.show
+begin.next.average.median.sum.size.ordered:false.show
+some_random_line_that_should_throw_exception
 quit

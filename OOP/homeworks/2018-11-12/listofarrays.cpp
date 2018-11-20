@@ -5,6 +5,8 @@
 #include <sstream>
 #include <cstdlib>
 #include <iomanip> 
+#include <cmath>
+#include <regex>
 
 using namespace std;
 
@@ -62,8 +64,10 @@ class ListOfArrays {
                 : list_(list), current_(current) {}
 
             bool operator==(const Iterator& other){
-                if(this->current_->prev_ == other.current_->prev_ && this->current_->next_ == other.current_->next_) return true;
-                return false;
+                return current_ == other.current_;
+                //if(this->current_->prev_ == other.current_->prev_ && this->current_->next_ == other.current_->next_) return true;
+                //return false;
+                
                 //if(current_->size_ != other.current_->size_){
                 //    return false;
                 //}
@@ -80,17 +84,11 @@ class ListOfArrays {
             }
 
             Iterator& operator++(){ // ++it
-                if(current_->next_ == list_->head_){
-                    throw IteratorException();
-                }
                 current_ = current_->next_;
                 return *this;
             }
 
             Iterator operator++(int){ // it++
-                if(current_->next_ == list_->head_){
-                    throw IteratorException();
-                }
                 Iterator result(list_, current_);
                 current_ = current_->next_;
                 return result;
@@ -116,9 +114,10 @@ class ListOfArrays {
             }
 
             void show(){
-                for(int i = 0; i < size(); i++){
-                    cout << " " << current_->data_[i];
+                for(int i = 0; i < size() - 1; i++){
+                    cout << current_->data_[i] << " ";
                 }
+                cout << current_->data_[size() - 1];
             }
             
             double average(){
@@ -127,16 +126,14 @@ class ListOfArrays {
             
             double median(){
                 ordered(true); // sort 
+                double result = 0;
                 if(size() % 2 == 0){ // check even
-                    int sum = current_->data_[size()/2 - 1] + current_->data_[size()/2];
-                    
-                    double median = (double)sum / 2.0;
-                    
-                    return median;
+                    result = (current_->data_[size()/2] + current_->data_[size()/2 - 1]) /2.0;
                 }
                 else{
                     return current_->data_[size()/2];
                 }
+                return result;
             }
             
             int sum(){
@@ -324,7 +321,7 @@ class ListOfArrays {
         void show(){
             for(Iterator it = begin(); it != --end(); it++){
                 it.show();
-                cout << ";";
+                cout << "; ";
             }
             Iterator it = --end();
             it.show();
@@ -346,13 +343,18 @@ class ListParser{
             read_matrix();
             
             string commands;
+            cout.precision(3);
             cout << "> ";
             do{
                 list = initial_list;
                 getline(cin, commands);
-                cout << ">";
+                
+                commands = regex_replace(commands, regex("^ +| +$|( ) +"), "$1"); // trim whitespace
+                cout << "> " ;
                 execute_line(commands);
             }while(commands != "quit");
+            //double number = 907.667;
+            //cout << "precision: " << get_precision(number) << endl;
         }
         void read_matrix(){
             string matrix;
@@ -374,77 +376,70 @@ class ListParser{
             }while(position != string::npos);
         }
         void execute_line(const string& commands){
+            //TODO: map strings to functions
+            //TODO: iterator and list commands in different functions
             istringstream iss(commands);
             string command;
             is_iterator = false;
             do{
                 getline(iss, command, '.');
-                //TODO: USE enum
                 
-                if(command == "show"){
+                if(command == "show" && !is_iterator){
                     
                     list.show();
                 }
-                else if(command == "size"){
+                else if(command == "size"  && !is_iterator){
                     
-                    cout << " " << list.size() << endl;
+                    cout << list.size() << endl;
                 }
-                else if(command == "averages"){
+                else if(command == "averages" && !is_iterator){
                     double* averages = new double[list.size()];
                    list.averages(averages);
                     cout << fixed;    
                     for(int i = 0; i < list.size(); i++){
-                        int average = 10 * averages[i];
-                        if(average % 10 == 0){
-                            cout << " " << average / 10;
-                        }
-                        else{
-                            cout << " " << setprecision(1) <<averages[i];
-                        }
+                        //int precision = get_precision(averages[i]);
+                        //cout << setprecision(min(precision, 3)) << averages[i] << " ";
+                        print_number(averages[i]); 
                     }
                     delete averages;
                     cout << endl;
                 }
-                else if(command == "medians"){
+                else if(command == "medians" && !is_iterator){
                     double* medians = new double[list.size()];
                     list.medians(medians);
                     cout << fixed;
                     for(int i = 0; i < list.size(); i++){
-                        int median = medians[i] * 10;
-                        if(median % 10 == 0){
-                            cout << " " << median / 10;
-                        }
-                        else{
-                            cout <<" " << setprecision(1) <<  medians[i];
-                        }
+                        print_number(medians[i]);
+                        //int precision = get_precision(medians[i]);
+                        //cout << setprecision(min(precision, 3)) << medians[i] << " ";
                         
                     }
                     delete medians;
                     cout << endl;
 
                 }
-                else if(command == "sizes"){
+                else if(command == "sizes" && !is_iterator){
                     int* sizes = new int[list.size()];
                     list.sizes(sizes);
                     
                     for(int i = 0; i < list.size(); i++){
-                        cout << " " << sizes[i] ;
+                        cout  << sizes[i] << " ";
                     }
                     delete sizes;
                     cout << endl;
 
                 }
-                else if(command == "sums"){
+                else if(command == "sums" && !is_iterator){
                     int* sums = new int[list.size()];
                     list.sums(sums);
                     
                     for(int i = 0; i < list.size(); i++){
-                        cout << " " << sums[i] ;
+                        cout  << sums[i] << " ";
                     }
                     delete sums;
                     cout << endl;
                 }
-                else if((command.find("ordered") != string::npos)){
+                else if((command.find("ordered") != string::npos) && !is_iterator){
                     string state = command.substr(command.find(":"));
                     state.erase(0, 1);
                     bool ascending;
@@ -456,12 +451,12 @@ class ListParser{
                     
                     list.ordered(ascending);
                 }
-                else if(command.find("mul") != string::npos){
+                else if(command.find("mul") != string::npos && !is_iterator){
                     string mul = command.substr(command.find(":") + 1);
                     int multiplier = stoi(mul);
                     list *= multiplier;
                 }
-                else if(command.find("add") != string::npos){
+                else if(command.find("add") != string::npos && !is_iterator){
                     string add_str = command.substr(command.find(":") + 1);
                     int add = stoi(add_str);
                     list += add;
@@ -471,12 +466,10 @@ class ListParser{
                     is_iterator = true;
                 }
                 else if(command == "next" && is_iterator){
-                        try{
-                            iterator++;
-                        } catch(IteratorException e){
-                            cout << "ERROR: End of iteration" << endl;
-                            break;
-                        }
+                    if(++iterator == list.end()){
+                        cout << "ERROR: End of iteration" << endl;
+                        break;
+                    }
                         
                 }
                 else if(command == "show" && is_iterator){
@@ -487,7 +480,7 @@ class ListParser{
                 else if(command.find("at") != string::npos && is_iterator){
                     int index = stoi(command.substr(command.find(":")  + 1));
                     try{
-                        cout << iterator[index];
+                        cout << iterator[index] << endl;
                     } catch(IteratorException e){
                         cout << "ERROR: Index out of bounds" << endl;
                     }
@@ -497,20 +490,29 @@ class ListParser{
                     cout << iterator.size() << endl;
                 }
                 else if(command == "average" && is_iterator){
+                    print_number(iterator.average());
+                    cout << endl;
+                    //int precision = get_precision(iterator.average());
+                    //cout << setprecision(min(precision, 3)) << iterator.average() << endl;
                     
-                    cout << iterator.average() << endl;
                 }
                 else if(command == "sum" && is_iterator){
                     
                     cout << iterator.sum() << endl;
                 }
                 else if(command == "median" && is_iterator){
-                    
-                    cout << iterator.median() << endl;
+                    print_number(iterator.median());
+                    cout << endl;
+                    //int precision = get_precision(iterator.median());
+                    //cout << setprecision(min(precision, 3)) << iterator.median() << endl;
+                
                 }
                 else if((command.find("ordered")!= string::npos) && is_iterator && is_iterator){
                     bool ascending = (command.substr(command.find(":")  + 1 ) == "true") ? true : false;
                     iterator.ordered(ascending);
+                }
+                else if(command == "quit"){
+                    break;
                 }
                 else{
                     cout << "ERROR: Unknown operation" << endl;
@@ -519,12 +521,35 @@ class ListParser{
                 
             }while(!iss.eof());
         }
-        void execute_iterator_command(string command){
-        ~ListParser(){
+        int get_precision(double num){
+            string s = to_string(num);
+            cout << "string: " << s << endl;
+            size_t dot_pos = s.find(".");
+            cout << "dot_pos: " << dot_pos << endl;
+            string start = s.substr(dot_pos + 1);
+            cout << "start: " << start << endl;
+            size_t zero_pos = start.find("0");
+            cout << "dot_pos: " << dot_pos << "zero_pos: " << zero_pos << endl;
+            //if(zero_pos == string::npos){
+            //    return 0;
+            //}
+           return zero_pos;
         }
+        void print_number(double number){
+            string str = to_string(number);
+            str.erase ( str.find_last_not_of('0') + 1, string::npos );
+            if(str.back() == '.'){
+                str.pop_back();
+            }
+            cout << str << " " ;
+            
+        }
+    
+        
 };
 
 int main(){
     ListParser parser;
     parser.parse();
+    
 }

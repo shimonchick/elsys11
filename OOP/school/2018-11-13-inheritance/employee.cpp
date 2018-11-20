@@ -15,7 +15,7 @@ class Employee{
         const string& get_name() const{
             return name_;
         }
-        void print() const {
+        virtual void print() const {
             cout << "name: " << name_ << "id: " << id_ << endl;
         }
         
@@ -40,9 +40,15 @@ class Manager : public Employee{
 
 int main(){
     Manager m1(2, "Whoever", 2);
-    m1.print();
     Employee e1 = (Employee)m1;
-    e1.print();
+    
 
+    Employee* pe[2];
+    pe[0] = &e1;
+    pe[1] = &m1;
+
+    for(int i = 0; i < 2; i++){
+        pe[i] -> print();
+    }
     return 0;
 }
