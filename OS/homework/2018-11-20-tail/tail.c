@@ -19,82 +19,101 @@
 // PARAMETERS:
 // const char* filename --> the name of the file we want to execute the function on
 //------------------------------------------------------------------------
-int tail(const char* filename){
-    
-    int fd;
+int tail(int fd){
+    char character;
     char buffer[BUFFER_SIZE];
     ssize_t bytes_read = 0;
-    if((fd = open(filename, O_RDONLY)) < 0){
-        perror("open");
-        return 1;
-    }
-    if(lseek(fd, 0, SEEK_END) < 0){
+
+    off_t position;
+    if((position = lseek(fd, -1 , SEEK_END)) < 0){
         perror("lseek");
         return 1;
     } 
-    int lines = 0, total_offset = BUFFER_SIZE;
-    if(lseek(fd, -total_offset, SEEK_CUR) < 0){
-        perror("lseek");
-        return 1;
-    }
+    int lines = 0;
+    while(lines < 11 && position != 0){ // there are 11 \n in 10 lines, including the one before the first line
+        if((bytes_read = read(fd, &character, 1)) < 0){
+            perror("read");
+            return 1;
+        }
+        if(character == '\n'){
+            lines++;
+            if(lines == 11){ // so we don't seek back another byte after reading the last line
+                break;
+            }
+        }
+        if((position = lseek(fd, -2, SEEK_CUR)) < 0){
+            perror("lseek");
+            return 1;
+        }
+    } 
     while((bytes_read = read(fd, buffer, BUFFER_SIZE)) != 0){
         if(bytes_read < 0){
             perror("read");
             return 1;
         }
-        int i = bytes_read - 1;
-        while(i > 0 && lines != 10){
-            if(buffer[i--] == '\n'){
-                lines++;
-            }
+        write(STDOUT_FILENO, buffer, bytes_read);
+    }
+}
+int read_stdin(int fd){
+    ssize_t bytes_read, bytes_write;
+    char buffer[BUFFER_SIZE];
+    while((bytes_read = read(STDIN_FILENO, buffer, BUFFER_SIZE)) != 0){
+        if(bytes_read < 0){
+            perror("read");
+            return -1;
         }
-        if(lines == 10){
-            if(lseek(fd, -bytes_read, SEEK_CUR) < 0){
-                perror("lseek");
-                return 1;
-            }
-            ssize_t bytes_read = 0;
-            while((bytes_read = read(fd, buffer, BUFFER_SIZE)) != 0){
-                if(bytes_read < 0){
-                    perror("read");
-                    return 1;
-                }
-                write(fd, buffer, bytes_read);
-            } 
+        bytes_write = write(fd, buffer, bytes_read);
+        if(bytes_write < 0){
+            perror("write");
+            return -1;
+        }
+    
+    }
 
-            break;
-        
-        }
-        total_offset += bytes_read;
-        if(lseek(fd, -total_offset, SEEK_CUR) < 0){
-            perror("lseek");
+    return fd;
+}
+int main(int argc, char* argv[]){
+    if(argc == 1){ // STDIN
+        char *filename = tmpnam(NULL);
+        int fd;
+        if ((fd = open(filename, O_CREAT | O_RDWR, 0744)) < 0) {
+            perror("error with open for tmpnam");
             return 1;
         }
-        
-
+        unlink(filename); 
+        read_stdin(fd);
+        tail(fd);
+        close(fd);
     }
-
-}
-
-int main(int argc, char* argv[]){
-    if(argc == 1){
-        return 1;
+    else if(argc == 2){ // 1 file
+        int fd;
+        if((fd = open(argv[1], O_RDONLY)) < 0 ){
+            perror("open");
+            return 1;
+        }
+        tail(fd);
+        close(fd);
     }
-    else if(argc == 2){
-        tail(argv[1]);
-    }
-    else{
+    else{ // multiple files
         for(int i = 1; i < argc; i++){
             char filename_buffer[FILENAME_SIZE + 10] = "==> ";
             strcat(filename_buffer, argv[i]);
             strcat(filename_buffer, " <==\n");
             write(STDOUT_FILENO, filename_buffer, strlen(filename_buffer));
-            tail(argv[i]);
+
+            int fd;
+            if((fd = open(argv[i], O_RDONLY)) < 0 ){
+                perror("open");
+                return 1;
+            }
+            tail(fd);
+            close(fd);
+
             if(i != argc - 1){
                 write(STDOUT_FILENO, "\n", 1);
             }
         }
     }
-        
+
     return 0;
 }

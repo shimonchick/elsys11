@@ -331,12 +331,12 @@ class ListOfArrays {
 
 class ListParser{
     private:
-        ListOfArrays list;
+        ListOfArrays listOfArrays;
         ListOfArrays initial_list;
         ListOfArrays::Iterator iterator;
         bool is_iterator;
     public:
-        ListParser() : iterator(list.begin()), is_iterator(false){}
+        ListParser() : iterator(listOfArrays.begin()), is_iterator(false){}
         
         void parse(){
             
@@ -346,10 +346,10 @@ class ListParser{
             cout.precision(3);
             cout << "> ";
             do{
-                list = initial_list;
+                listOfArrays = initial_list;
                 getline(cin, commands);
                 
-                commands = regex_replace(commands, regex("^ +| +$|( ) +"), "$1"); // trim whitespace
+                commands = regex_replace(commands, regex("^ +| +$|( ) +"), "$1");
                 cout << "> " ;
                 execute_line(commands);
             }while(commands != "quit");
@@ -386,17 +386,17 @@ class ListParser{
                 
                 if(command == "show" && !is_iterator){
                     
-                    list.show();
+                    listOfArrays.show();
                 }
                 else if(command == "size"  && !is_iterator){
                     
-                    cout << list.size() << endl;
+                    cout << listOfArrays.size() << endl;
                 }
                 else if(command == "averages" && !is_iterator){
-                    double* averages = new double[list.size()];
-                   list.averages(averages);
+                    double* averages = new double[listOfArrays.size()];
+                   listOfArrays.averages(averages);
                     cout << fixed;    
-                    for(int i = 0; i < list.size(); i++){
+                    for(int i = 0; i < listOfArrays.size(); i++){
                         //int precision = get_precision(averages[i]);
                         //cout << setprecision(min(precision, 3)) << averages[i] << " ";
                         print_number(averages[i]); 
@@ -405,10 +405,10 @@ class ListParser{
                     cout << endl;
                 }
                 else if(command == "medians" && !is_iterator){
-                    double* medians = new double[list.size()];
-                    list.medians(medians);
+                    double* medians = new double[listOfArrays.size()];
+                    listOfArrays.medians(medians);
                     cout << fixed;
-                    for(int i = 0; i < list.size(); i++){
+                    for(int i = 0; i < listOfArrays.size(); i++){
                         print_number(medians[i]);
                         //int precision = get_precision(medians[i]);
                         //cout << setprecision(min(precision, 3)) << medians[i] << " ";
@@ -419,10 +419,10 @@ class ListParser{
 
                 }
                 else if(command == "sizes" && !is_iterator){
-                    int* sizes = new int[list.size()];
-                    list.sizes(sizes);
+                    int* sizes = new int[listOfArrays.size()];
+                    listOfArrays.sizes(sizes);
                     
-                    for(int i = 0; i < list.size(); i++){
+                    for(int i = 0; i < listOfArrays.size(); i++){
                         cout  << sizes[i] << " ";
                     }
                     delete sizes;
@@ -430,10 +430,10 @@ class ListParser{
 
                 }
                 else if(command == "sums" && !is_iterator){
-                    int* sums = new int[list.size()];
-                    list.sums(sums);
+                    int* sums = new int[listOfArrays.size()];
+                    listOfArrays.sums(sums);
                     
-                    for(int i = 0; i < list.size(); i++){
+                    for(int i = 0; i < listOfArrays.size(); i++){
                         cout  << sums[i] << " ";
                     }
                     delete sums;
@@ -449,24 +449,24 @@ class ListParser{
                         ascending = false;
                     }
                     
-                    list.ordered(ascending);
+                    listOfArrays.ordered(ascending);
                 }
                 else if(command.find("mul") != string::npos && !is_iterator){
                     string mul = command.substr(command.find(":") + 1);
                     int multiplier = stoi(mul);
-                    list *= multiplier;
+                    listOfArrays *= multiplier;
                 }
                 else if(command.find("add") != string::npos && !is_iterator){
                     string add_str = command.substr(command.find(":") + 1);
                     int add = stoi(add_str);
-                    list += add;
+                    listOfArrays += add;
                 }
                 else if(command == "begin"){
-                    iterator = list.begin();
+                    iterator = listOfArrays.begin();
                     is_iterator = true;
                 }
                 else if(command == "next" && is_iterator){
-                    if(++iterator == list.end()){
+                    if(++iterator == listOfArrays.end()){
                         cout << "ERROR: End of iteration" << endl;
                         break;
                     }
@@ -553,3 +553,4 @@ int main(){
     parser.parse();
     
 }
+

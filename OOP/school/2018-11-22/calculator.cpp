@@ -1,8 +1,17 @@
 #include "calculator.h"
+#include "operation.h"
 #include <iostream>
 #include <sstream>
 using namespace std;
 class CalculatorException{};
+
+Operation* Calculator::get_operation(const string& name) const{
+    for(list<Operation*>::const_iterator it = operations_.begin(); it != operations_.end(); it++){
+        if(*it)->get_name() == name){
+            return *it;
+        }
+    }
+}
 
 double Calculator::pop(){
     double result = values_.back();
@@ -25,16 +34,8 @@ void Calculator::run(istream& in, ostream& out){
         if(!iss.fail() && iss.eof()){
             push(value);
         }else{
-            double result;
-            if(token == "abs"){
-                result = pop();
-                result = result < 0 ? -result : result;
-                push(result);
-
-            }
-            else{
-                throw CalculatorException();
-            }
+            Operation* operation = get_operation(token);
+            double result = operation->execute();
             out << result << endl;
         }
     }

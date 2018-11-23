@@ -1,0 +1,6 @@
+p:first-child{
+    color:red;
+}
+p:nth-of-type(3){
+    color: blue;
+}
