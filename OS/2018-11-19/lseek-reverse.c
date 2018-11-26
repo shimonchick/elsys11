@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
         perror("open");
         return 1;
     }
-    if((fd_write = open("a.txt", O_WRONLY) < 0)){
+    if((fd_write = open("a.txt", O_WRONLY)) < 0){
         perror("open");
         return 1;
     }

@@ -346,6 +346,16 @@ class Command{
         virtual void execute(string name){
             cout << "called base execute" <<endl;
             }
+
+    void print_number(double number){
+        string str = to_string(number);
+        str.erase ( str.find_last_not_of('0') + 1, string::npos );
+        if(str.back() == '.'){
+            str.pop_back();
+        }
+        cout << str << " " ;
+
+    }
 };
 class CommandException{
 private:
@@ -383,6 +393,8 @@ public:
 };
 
 class CommandNotFoundException{};
+class IndexOutOfBondsException{};
+class EndOfIterationException{};
 
 class ListShow : public ListCommand{
 public:
@@ -409,8 +421,8 @@ public:
         for(int i = 0; i < list.size(); i++){
             //int precision = get_precision(averages[i]);
             //cout << setprecision(min(precision, 3)) << averages[i] << " ";
-            //print_number(averages[i]);
-            cout << averages[i] << " ";
+            print_number(averages[i]);
+            //cout << averages[i] << " ";
         }
         delete averages;
         cout << endl;
@@ -424,10 +436,10 @@ public:
         list.medians(medians);
         cout << fixed;
         for(int i = 0; i < list.size(); i++){
-            //print_number(medians[i]);
+            print_number(medians[i]);
             //int precision = get_precision(medians[i]);
             //cout << setprecision(min(precision, 3)) << medians[i] << " ";
-            cout << medians[i] << " ";
+            //cout << medians[i] << " ";
         }
         delete medians;
         cout << endl;
@@ -515,7 +527,7 @@ public:
         : IteratorCommand(name, iterator_param), list(list_param){}
     void execute(){
         if(++iterator == list.end()){
-            throw CommandException("ERROR: End of iteration");
+            throw EndOfIterationException();
 
         }
     }
@@ -529,7 +541,7 @@ public:
             int index = stoi(i);
             cout << iterator[index] << endl;
         } catch(IteratorException e){
-            throw CommandException("ERROR: Index out of bounds");
+            throw IndexOutOfBondsException();
         }
     }
 
@@ -634,36 +646,27 @@ class ListParser{
                 getline(iss, command, '.');
                 //cout << command << endl;
                 size_t position;
-                
-                if((position = command.find(":")) != string::npos){
-                    try{
-                        
-                        Command* operation = get_list_command(command.substr(0, position));
-                        
+                try{
+                    if((position = command.find(":")) != string::npos) {
+                        Command *operation = get_list_command(command.substr(0, position));
+
                         string parameter = command.substr(position + 1);
                         //cout << "operation: " << command.substr(0, position) << "parameter: " << command.substr(position + 1) << endl;
-                        operation ->execute(parameter);
-                    } catch(CommandNotFoundException e){
-                        cout << "ERROR: Unknown operation";
-                        break;
+                        operation->execute(parameter);
+
                     }
-                    catch(CommandException e){
-                        cout << e.get_message() << endl;
+                    else{
+                            Command* operation = get_list_command(command);
+                            //cout << "operation: " << command.substr(0, position) << endl;
+                            operation->execute();
                     }
+                }catch(CommandNotFoundException e){
+                    cout << "ERROR: Unknown operation" << endl;
+                    break;
                 }
-                else{
-                    try{
-                        Command* operation = get_list_command(command);
-                        //cout << "operation: " << command.substr(0, position) << endl;
-                        operation->execute();
-                    } catch(CommandNotFoundException e){
-                        cout << "ERROR: Unknown operation";
-                        break;
-                    }
-                    catch(CommandException e){
-                        cout << e.get_message() << endl;
-                    }
-                }
+
+
+
 
             }while(!iss.eof());
         }
@@ -687,12 +690,17 @@ class ListParser{
                         operation->execute();
                     }
                 } catch(CommandNotFoundException e){
-                    cout << "ERROR: Unknown operation";
+                    cout << "ERROR: Unknown operation" << endl;
+                    break;
+                }catch(EndOfIterationException e){
+                    cout << "ERROR: End of iteration" << endl;
                     break;
                 }
-                catch(CommandException e){
-                    cout << e.get_message() << endl;
+                catch(IndexOutOfBondsException e){
+                    cout << "ERROR: Index out of bounds" << endl;
                 }
+
+
 
             }while(!iss.eof());
         }
@@ -731,15 +739,6 @@ class ListParser{
             //}
            return zero_pos;
         }
-        void print_number(double number){
-            string str = to_string(number);
-            str.erase ( str.find_last_not_of('0') + 1, string::npos );
-            if(str.back() == '.'){
-                str.pop_back();
-            }
-            cout << str << " " ;
-            
-        }
     
     public:
         ListParser() {
@@ -759,6 +758,8 @@ class ListParser{
                 
                 commands = regex_replace(commands, regex("^ +| +$|( ) +"), "$1");
                 cout << "> " ;
+                if(commands == "quit") break; // prevents the quit command from being executed(quick fix)
+
                 size_t position;
                 if((position = commands.find("begin")) != string::npos){
                     commands.erase(position, 6);
