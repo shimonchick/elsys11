@@ -7,55 +7,65 @@ using Random = UnityEngine.Random;
 public class AsteroidController : MonoBehaviour
 {
 
-	[SerializeField] private int spawnRate = 1; // 1 second
+	[SerializeField] private float spawnRate = 1; // 1 second
 	// Use this for initialization
 	[SerializeField] private int spawnCount = 1;
 	[SerializeField] private GameObject[] asteroidPrefabs;
 	[SerializeField] private Transform target;
+	[SerializeField] private float asteroidSpeed = 1.0f;
 	private List<GameObject> asteroids;
+	private float timePassed = 0.0f;
 	void Start () {
-		
+		asteroids = new List<GameObject>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Time.deltaTime % spawnRate == 0)
+		if (timePassed > spawnRate)
 		{
-			
-			GameObject asteroid = asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length - 1)];
-			int cameraHeight = Camera.main.pixelHeight;
-			int cameraWidth = Camera.main.pixelWidth;
-			Vector3 asteroidPosition = new Vector3();
-			switch ((int)(Random.value * 4))
-			{
-				case 1:
-					asteroidPosition.x = Random.Range(0, cameraWidth);
-					asteroidPosition.z = 0;
-					break;
-				case 2:
-					asteroidPosition.x = 0;
-					asteroidPosition.z = Random.Range(0, cameraHeight);
-					break;
-				case 3 :
-					asteroidPosition.x = Random.Range(0, cameraWidth);
-					asteroidPosition.z = cameraHeight;
-					break;
-				case 4:
-					asteroidPosition.x = cameraWidth;
-					asteroidPosition.z = Random.Range(0, cameraHeight);
-					break;
-			}
+			for(int i = 0; i < spawnCount; i++){
+				GameObject asteroid = asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length)];
+				int cameraHeight = Camera.main.pixelHeight;
+				int cameraWidth = Camera.main.pixelWidth;
+				Vector3 asteroidPosition = new Vector3();
+				switch (Random.Range(0, 4))
+				{
+					case 0:
+						asteroidPosition.x = Random.Range(0, cameraWidth);
+						asteroidPosition.z = 0;
+						break;
+					case 1:
+						asteroidPosition.x = 0;
+						asteroidPosition.z = Random.Range(0, cameraHeight);
+						break;
+					case 2 :
+						asteroidPosition.x = Random.Range(0, cameraWidth);
+						asteroidPosition.z = cameraHeight;
+						break;
+					case 3:
+						asteroidPosition.x = cameraWidth;
+						asteroidPosition.z = Random.Range(0, cameraHeight);
+						break;
+				}
 
-			asteroidPosition.y = target.position.y;
-			asteroid.transform.position = asteroidPosition;
-			asteroid.transform.LookAt(target);
-			Instantiate(asteroid);
-			asteroids.Add(asteroid);
-			
+				asteroidPosition.y = target.position.y;
+				
+				asteroid.transform.position = asteroidPosition;
+				
+				asteroid.transform.LookAt(target);
+				
+				Instantiate(asteroid);
+				
+				asteroids.Add(asteroid);
+
+				Debug.Log("Asteroid created");
+				timePassed = 0;
+			}
 		}
-		foreach(GameObject asteroid in asteroids)
+		timePassed += Time.deltaTime;
+		foreach(GameObject a in asteroids)
 		{
-			asteroid.transform.posiction += asteroid.transform.forward * Time.deltaTime * Random.Range(1, 10);
+			a.transform.position += a.transform.forward * Time.deltaTime * Random.Range(1, 10) * asteroidSpeed;
 		}
 	}
 }
