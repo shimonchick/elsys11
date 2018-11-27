@@ -47,11 +47,10 @@ public class AsteroidController : MonoBehaviour
 						asteroidPosition.z = Random.Range(0, cameraHeight);
 						break;
 				}
+                asteroidPosition = Camera.main.ScreenToWorldPoint(asteroidPosition);
+                asteroidPosition.y = 0;
+                asteroid.transform.position = asteroidPosition;
 
-				asteroidPosition.y = target.position.y;
-				
-				asteroid.transform.position = asteroidPosition;
-				
 				asteroid.transform.LookAt(target);
 				
 				Instantiate(asteroid);
@@ -65,7 +64,8 @@ public class AsteroidController : MonoBehaviour
 		timePassed += Time.deltaTime;
 		foreach(GameObject a in asteroids)
 		{
-			a.transform.position += a.transform.forward * Time.deltaTime * Random.Range(1, 10) * asteroidSpeed;
+            float maxDistance = Random.Range(1, 10) * asteroidSpeed * Time.deltaTime;
+			a.transform.position =Vector3.MoveTowards(a.transform.position, target.position, maxDistance);
 		}
 	}
 }
