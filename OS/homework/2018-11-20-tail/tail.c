@@ -15,7 +15,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 500
 #define FILENAME_SIZE 50
 // PARAMETERS:
 // const char* error --> the error message we want to print
@@ -55,16 +55,17 @@ int tail(int fd, const char* filename){
             return -1;
         }
     } 
-    while((bytes_read = read(fd, buffer, BUFFER_SIZE)) != 0){
+    bytes_read = 0;
+    bytes_write = 0;
+    while((bytes_read = read(fd, &character, 1)) != 0){
         if(bytes_read < 0){
             print_error( "tail: error reading '%s': ", filename);
             perror("");
             return -1;
         }
-        int offset = 0;
-        while((bytes_write = write(STDOUT_FILENO, buffer + offset, bytes_read)) != 0){
-            offset += bytes_write;
-            bytes_read -= bytes_write;
+    
+        while((bytes_write = write(STDOUT_FILENO, &character, 1)) != 1){
+        
             if(bytes_write < 0){
                 //print_error("tail: error writing '%s': ", filename);
                 perror("tail: error writing 'standard output'");
@@ -81,16 +82,13 @@ int tail(int fd, const char* filename){
 
 int read_stdin(int fd){
     ssize_t bytes_read, bytes_write;
-    char buffer[BUFFER_SIZE];
-    while((bytes_read = read(STDIN_FILENO, buffer, BUFFER_SIZE)) != 0){
+    char character;
+    while((bytes_read = read(STDIN_FILENO, &character, 1)) != 0){
         if(bytes_read < 0){
             perror("tail: error reading 'standard input': ");
             return -1;
         }
-        int offset = 0;
-        while((bytes_write = write(fd, buffer + offset, bytes_read)) != 0){
-            offset += bytes_write;
-            bytes_read -= offset;
+        while((bytes_write = write(fd, &character, 1)) != 1){
             if(bytes_write < 0){
                 perror("tail: error writing 'standard output': ");
                 return -1;
@@ -106,20 +104,29 @@ int read_stdin(int fd){
 // const char* name --> the name of the file, whose header we want to print
 //------------------------------------------------------------------------
 
-int print_header(const char* name){
+int print_header(const char* name, int newline){
     char filename_buffer[FILENAME_SIZE + 10] = "==> ";
     strcat(filename_buffer, name);
     strcat(filename_buffer, " <==\n");
     int size = strlen(filename_buffer);
     ssize_t bytes_write = 0;
+    if(newline){
+        while((bytes_write = write(STDOUT_FILENO, "\n", 1)) != 1){
+            if(bytes_write < 0){
+                perror("tail: error writing 'standard output': ");
+                return -1;
+
+            }
+        }
+    }
     int offset = 0;
-    while((bytes_write = write(STDOUT_FILENO, filename_buffer + offset, size)) != 0){
-        offset += bytes_write;
-        size -= offset;
+    while(offset < size){
+        bytes_write = write(STDOUT_FILENO, filename_buffer + offset, 1);
         if(bytes_write < 0){
             perror("tail: error writing 'standard output': ");
             return -1;
         }
+        offset += 1;
     }
     return 0;
 }
@@ -160,12 +167,12 @@ void print_error(const char error[], const char variable[]){
         }
         ssize_t bytes_write = 0;
         int offset = 0;
-        while((bytes_write = write(STDOUT_FILENO, result + offset, size)) != 0){
-           if(bytes_write < 0){
+        while(offset < size){
+            bytes_write = write(STDERR_FILENO, result + offset, 1);
+            if(bytes_write < 0){
                 perror("tail: error writing 'standard output': ");
             }
-            offset += bytes_write;
-            size -= offset;
+            offset += 1;
             
         }
 
@@ -174,7 +181,7 @@ void print_error(const char error[], const char variable[]){
 }
 // PARAMETERS:
 // const char* file_name --> the name of the file we want to execute the function on(used to print errors)
-// int fd ---> file ddescriptor of the file we want to execute the function on
+// int fd ---> file descriptor of the file we want to execute the function on
 //------------------------------------------------------------------------
 
 int open_file(int* fd, const char* file_name){
@@ -200,7 +207,9 @@ int open_file(int* fd, const char* file_name){
 //------------------------------------------------------------------------
 int close_file(int fd, const char* file_name){
     if(close(fd) < 0){
+       // print_error( "tail: error reading '%s': Input/output error", file_name);
         print_error( "tail: error reading '%s': ", file_name);
+        
         perror("");
         return -1;    
     }
@@ -248,12 +257,21 @@ int main(int argc, char* argv[]){
         return 0;
     }
     else{
+        int is_first_header = 1;
         for(int i = 1; i < argc; i++){
             int fd;
+            int newline;
             if(open_file(&fd, argv[i]) < 0){
                 continue;
             }
-            if(print_header(argv[i]) < 0){
+            if(is_first_header){
+                newline = 0;
+                is_first_header = 0;
+            }
+            else{
+                newline = 1;
+            }
+            if(print_header(argv[i], newline) < 0){
                 continue;
             }
             if(strcmp(argv[i], "standard input") == 0){
@@ -263,12 +281,6 @@ int main(int argc, char* argv[]){
             }
             if(tail(fd, argv[i]) < 0){
                 continue;
-            }
-            if(i != argc - 1){ // newline after each file
-                if(write(STDOUT_FILENO, "\n", 1) < 0){
-                    perror("tail: error writing 'standard output': ");
-                    continue; 
-                }
             }
             if(close_file(fd, argv[i]) < 0){
                 continue;
