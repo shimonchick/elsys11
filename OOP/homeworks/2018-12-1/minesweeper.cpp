@@ -136,17 +136,14 @@ public:
         
         for (int rows = 0; rows < height; rows++) {
             for (int cols = 0; cols < width; cols++) {
-                if (cols == bomb.get_x() && rows == bomb.get_y()) {
-                    matrix[rows][cols];
-                    matrix[rows][cols].set_x(cols).set_y(rows);
+                if (cols == bomb.get_y() && rows == bomb.get_x()) {
                     matrix[rows][cols].is_bomb = true;
-                    int bomb_neighbours = get_bomb_neighbours_count(matrix[rows][cols]);
-                    matrix[rows][cols].set_bomb_neighbours(bomb_neighbours);
                     bomb_index++;
                     bomb = bombs[bomb_index];
-                } else {
-                    matrix[rows][cols].set_x(cols).set_y(rows);
                 }
+                matrix[rows][cols].set_x(cols).set_y(rows);
+                int bomb_neighbours = get_bomb_neighbours_count(matrix[rows][cols]);
+                matrix[rows][cols].set_bomb_neighbours(bomb_neighbours);
                 //cout << "adding point at x: " << j << " y: " << i << endl;
             }
         }
@@ -159,11 +156,11 @@ public:
         delete [] matrix;
     }
 
-    point* at(int x, int y){
-        if(x < 0 ||  x > width || y < 0 || y > height){
+    point* at(int row, int col){
+        if(col < 0 ||  col >= width || row < 0 || row >= height){
             return NULL;
         }
-        return &matrix[x][y];
+        return &matrix[row][col];
     }
 
     vector<point> get_neighbours(const point& current) {
