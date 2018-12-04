@@ -120,9 +120,9 @@ public:
     Matrix(int width_param, int height_param, vector<point> &bombs)
             : width(width_param), height(height_param) 
         {
-        sort(bombs.begin(), bombs.end());
-        int bomb_index = 0;
-        point bomb = bombs[bomb_index];
+        //sort(bombs.begin(), bombs.end());
+        //int bomb_index = 0;
+        //point bomb = bombs[bomb_index];
         
         matrix = new point*[height];
         for(int rows = 0; rows < height; rows++){
@@ -134,20 +134,27 @@ public:
             matrix[rows] = row;
         }
         
-        for (int rows = 0; rows < height; rows++) {
-            for (int cols = 0; cols < width; cols++) {
-                if (cols == bomb.get_y() && rows == bomb.get_x()) {
-                    matrix[rows][cols].is_bomb = true;
-                    bomb_index++;
-                    bomb = bombs[bomb_index];
-                }
+        for (int rows = 0; rows < height; rows++)
+        {
+            for (int cols = 0; cols < width; cols++) 
+            {
                 matrix[rows][cols].set_x(cols).set_y(rows);
-                int bomb_neighbours = get_bomb_neighbours_count(matrix[rows][cols]);
-                matrix[rows][cols].set_bomb_neighbours(bomb_neighbours);
-                //cout << "adding point at x: " << j << " y: " << i << endl;
+                for(vector<point>::iterator it = bombs.begin(); it != bombs.end(); it++)
+                {
+                    if (cols == (*it).get_y() && rows == (*it).get_x()) { // TODO: check if this is right
+                        matrix[rows][cols].is_bomb = true;
+                    }
+                }
             }
         }
-
+        for(int rows = 0; rows < height; rows++){
+            for(int cols = 0; cols < width; cols++){
+                int bomb_neighbours = get_bomb_neighbours_count(matrix[rows][cols]);
+                matrix[rows][cols].set_bomb_neighbours(bomb_neighbours);
+            }
+        }
+        //cout << "bomb neighbours: " << bomb_neighbours << endl;
+        
     }
     ~Matrix(){
         for(int rows = 0; rows < height; rows++){
@@ -186,7 +193,7 @@ public:
         for(int i = 0; i < 8; i++){
             if(neighbours[i]) {
                 result.push_back(*neighbours[i]);
-
+             
             }
         }
         return result;
@@ -194,6 +201,7 @@ public:
     }
     int get_bomb_neighbours_count(const point& point){
         int result = 0;
+        //cout << "point neighbours: " << get_neighbours(point).size();
         for(auto neighbour : get_neighbours(point)){
             if(neighbour.is_bomb){
                 result++;
@@ -273,7 +281,9 @@ class Flag : public Command{
         Flag(const string& name, Matrix& matrix_param) : Command(name, matrix_param){}
         void execute(int x, int y) override{
             point* point = matrix.at(x, y);
-            point->flag();
+            if(point){
+                point->flag();
+            }
         }
 };
 class GameOverException{};
@@ -416,10 +426,11 @@ class minesweeper {
                 point point;
                 string command;
                 
-                read_command(command, point);
+                //read_command(command, point);
                 matrix.show(out);
 
                 out << "> ";
+                read_command(command, point);
                 //out << "command: " << command;
 
                 int x = point.get_x();
