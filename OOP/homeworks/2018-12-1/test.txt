@@ -1,6 +1,10 @@
 3 3
 1
 1,1
+hint 5,20
+hint 1,1
+hint 2,2
+click 5,20
 click 0,0
 click 0,1
 click 0,2
@@ -9,3 +13,4 @@ click 1,2
 click 2,0
 click 2,1
 click 2,2
+click 4,2

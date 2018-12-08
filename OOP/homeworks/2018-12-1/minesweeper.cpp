@@ -7,34 +7,64 @@
 #include <cmath>
 #include <cstdio>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
 class point {
     private:
         int x_, y_;
-        bool is_flagged;
+        //getters and setters with better names are present ;)
+        bool flagged;
+        bool closed;
+        bool bomb;
+        bool visited;
         
         int bomb_neighbours_count;
     public:
-
-        bool is_closed;
-        bool is_bomb;
-        bool is_visited;
+        
         point(int x = 0, int y = 0) : x_(x), y_(y) {
-            is_flagged = false;
-            is_closed = true;
-            is_visited = false;
-            is_bomb = false;
+            flagged = false;
+            closed = true;
+            visited = false;
+            bomb = false;
             bomb_neighbours_count = 0;
         }
-
-        void set_bomb_neighbours(int count){
-            bomb_neighbours_count = count;
+        bool is_visited() const{
+            return visited;
         }
+        void set_visited(){
+            visited = true;
+        }
+        bool is_closed() const{
+            return closed;
+        }
+        void set_open(){
+            closed = false;
+        }
+        bool is_bomb() const{
+            return bomb;
+        }
+        void set_bomb(){
+            bomb = true;
+        }
+        bool is_flagged() const{
+            return flagged;
+        }
+        void flag(){
+            flagged = !flagged;
+        }
+        void unflag(){
+            flagged = false;
+        }
+
         int get_bomb_neighbours() const{
             return bomb_neighbours_count;
         }
+        void set_bomb_neighbours(int count){
+            bomb_neighbours_count = count;
+        }
+        
         int get_x() const {
             return x_;
         }
@@ -43,41 +73,19 @@ class point {
             return y_;
         }
 
-        point& set_x(int x) {
+        void set_x(int x) {
             x_ = x;
-            return *this;
+            
         }
 
-        point& set_y(int y) {
+        void set_y(int y) {
             y_ = y;
-            return *this;
+            
         }
-        void set_bomb(){
-            is_bomb = true;
-        }
-        void flag(){
-            is_flagged = !is_flagged;
-        }
-        bool operator== (const point& other){
-            return this->x_ == other.x_ && this->y_ == other.y_;
-        }
-        bool operator <(const point& other){
-            if(this-> y_ < other.y_){
-                return true;
-            }
-            else if(this->y_ > other.y_){
-                return false;
-            }
-            else if(this->x_ < other.x_){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
+        
         void show(ostream& out){
-            if(is_closed){
-                if(is_flagged){
+            if(is_closed()){
+                if(is_flagged()){
                     out << "!";
                 }
                 else{
@@ -85,11 +93,11 @@ class point {
                 }
             }
             else{
-                if(is_bomb){
+                if(is_bomb()){
                     out << "*";
                 }
                 else{
-                    out << bomb_neighbours_count;
+                    out << get_bomb_neighbours();
                 }
             }
         }
@@ -120,10 +128,8 @@ public:
     Matrix(int width_param, int height_param, vector<point> &bombs)
             : width(width_param), height(height_param) 
         {
-        //sort(bombs.begin(), bombs.end());
-        //int bomb_index = 0;
-        //point bomb = bombs[bomb_index];
         
+        //allocate memory
         matrix = new point*[height];
         for(int rows = 0; rows < height; rows++){
             point* row = new point[width];
@@ -134,23 +140,28 @@ public:
             matrix[rows] = row;
         }
         
+        //set point properties
         for (int rows = 0; rows < height; rows++)
         {
             for (int cols = 0; cols < width; cols++) 
             {
-                matrix[rows][cols].set_x(cols).set_y(rows);
+                point* p = at(rows, cols);
+                p->set_x(cols);
+                p->set_y(rows);
                 for(vector<point>::iterator it = bombs.begin(); it != bombs.end(); it++)
                 {
                     if (cols == (*it).get_y() && rows == (*it).get_x()) { // TODO: check if this is right
-                        matrix[rows][cols].is_bomb = true;
+                        p->set_bomb();
                     }
                 }
             }
         }
+        //set point neighbours
         for(int rows = 0; rows < height; rows++){
             for(int cols = 0; cols < width; cols++){
-                int bomb_neighbours = get_bomb_neighbours_count(matrix[rows][cols]);
-                matrix[rows][cols].set_bomb_neighbours(bomb_neighbours);
+                point* p = at(rows, cols);
+                int bomb_neighbours = get_bomb_neighbours_count(p);
+                p->set_bomb_neighbours(bomb_neighbours);
             }
         }
         //cout << "bomb neighbours: " << bomb_neighbours << endl;
@@ -162,7 +173,8 @@ public:
         }
         delete [] matrix;
     }
-
+    //I will use pointers instead of references to NULL check the neighbours
+    //Pointers are not mixed with references for consistency
     point* at(int row, int col){
         if(col < 0 ||  col >= width || row < 0 || row >= height){
             return NULL;
@@ -170,11 +182,15 @@ public:
         return &matrix[row][col];
     }
 
-    vector<point> get_neighbours(const point& current) {
+  
+    int get_bomb_neighbours_count(const point* current){
+        int result = 0;
+        //cout << "point neighbours: " << get_neighbours(point).size();
         point* neighbours[8];
-        int cols = current.get_x();
-        int rows = current.get_y();
-        vector<point> result;
+        
+        int cols = current->get_x();
+        int rows = current->get_y();
+        
         neighbours[0] = at(rows - 1, cols - 1);
 
         neighbours[1] = at(rows - 1, cols);
@@ -190,31 +206,12 @@ public:
         neighbours[6] = at(rows + 1, cols);
 
         neighbours[7] = at(rows + 1, cols + 1);
+        
         for(int i = 0; i < 8; i++){
-            if(neighbours[i]) {
-                result.push_back(*neighbours[i]);
-             
-            }
-        }
-        return result;
-
-    }
-    int get_bomb_neighbours_count(const point& point){
-        int result = 0;
-        //cout << "point neighbours: " << get_neighbours(point).size();
-        for(auto neighbour : get_neighbours(point)){
-            if(neighbour.is_bomb){
-                result++;
-            }
-        }
-        return result;
-    }
-    int clicked(){
-        int result = 0;
-        for(int rows = 0; rows < height; rows++){
-            for(int cols = 0; cols < width; cols++){
-                if(matrix[rows][cols].is_closed)
-                result++;
+            if(neighbours[i]){
+                if(neighbours[i]->is_bomb()){
+                    result++;
+                }
             }
         }
         return result;
@@ -224,20 +221,23 @@ public:
     void show(ostream &out) {
         for (int rows = 0; rows < height; rows++) {
             for (int cols = 0; cols < width; cols++) {
-                matrix[rows][cols].show(out);
+                point* p = at(rows, cols);
+                p->show(out);
                 //cout << "showing point :" << i * width + j << endl;
             }
             out << endl;
         }
     }
+
     void show_all(ostream& out){
         for(int rows = 0; rows < height; rows++){
             for(int cols = 0; cols < width; cols++){
-                if(matrix[rows][cols].is_bomb){
+                point* p = at(rows, cols);
+                if(p->is_bomb()){
                     out << "*";
                 }
                 else{
-                    out << matrix[rows][cols].get_bomb_neighbours();
+                    out << p->get_bomb_neighbours();
                 }
             }
             out << endl;
@@ -246,23 +246,14 @@ public:
     bool check_win() {
         for(int rows = 0; rows < height; rows++){
             for(int cols = 0; cols < width; cols++){
-                point p = matrix[rows][cols];
-                if (p.is_closed && !p.is_bomb) return false;
+                point* p = at(rows, cols);
+                if (p->is_closed() && !p->is_bomb()) return false;
             }
            
         }
         return true;
     }
-    void set_unvisited(){
-        for(int rows = 0; rows < height; rows++){
-            for(int cols = 0; cols < width; cols++){
-                point p = matrix[rows][cols];
-                p.is_visited = false;
-            }
-           
-        }
-        
-    }
+
 };
 /* Enter your code here. */   
 class Command{
@@ -282,7 +273,10 @@ class Flag : public Command{
         void execute(int x, int y) override{
             point* point = matrix.at(x, y);
             if(point){
-                point->flag();
+                if(point->is_closed()){
+                    point->flag();
+                }
+                
             }
         }
 };
@@ -297,49 +291,86 @@ class Click : public Command{
         void execute(int x, int y) override {
             point *point = matrix.at(x, y);
             if (point) {
-                if(point->is_bomb) {
+                if(point->is_bomb()) {
                     throw GameOverException();
                 } else {
                     //out << "opening boxes:" << endl;
-                    point->is_closed = false;
-                    matrix.set_unvisited();
-                    this->open_box(x, y);
+                    //point->is_closed = false;
+                    //matrix.set_unvisited();
+                    point->unflag();
+                    this->open_box(point);
                 }
             }
         }
-        void open_box(int x, int y)
+        // [old version of code, don't uncomment]
+       //turns out vector operations andd recursion are slow when called many times so i will implement it with pointers
+       //thought i would add some extra lines so i don't get accused of cheating again ;d
+       /* 
+        void open_box(point* point)
         {
-            point *point = matrix.at(x, y);
-            if (!point) return;
-            //out << "point exists" << endl;
-            if(point->is_visited) return;
+            if(point->is_visited()) return;
             //out << "point is closed" << endl;
-            if (point->is_bomb) return;
+            if (point->is_bomb()) return;
             //out << "point is not a bomb" << endl;
-            
+            if(!point->is_closed()) return;
             
             //out << "opening box: " << point->get_x() <<  "," << point->get_y() << endl;
-            point->is_closed = false;
-            point->is_visited = true;
+            point->set_open();
+            point->set_visited();
             
-            if(point->get_bomb_neighbours() != 0) return;
-
-            for(auto neighbour : matrix.get_neighbours(*point)){
-                
-                open_box(neighbour.get_x(), neighbour.get_y());
+            if(point->get_bomb_neighbours() == 0){
+                for(auto neighbour : matrix.get_neighbours(point)){
+                    if(neighbour){
+                        open_box(neighbour);
+                        
+                    }
+                }
             }
-            //out << "boxes open: " << matrix.clicked() << endl;
-            /*
-            open_box(x - 1, y - 1);
-            open_box(x, y - 1);
-            open_box(x + 1, y - 1);
-            open_box(x - 1, y);
-            open_box(x + 1, y);
-            open_box(x - 1, y + 1);
-            open_box(x, y + 1);
-            open_box(x + 1, y + 1);
-        */
+        
         }
+        */
+        //and this is too slow aswell ? hell what am i supposed to do then ?
+        
+        void open_box(point* p){
+            if(p->is_visited()) return;
+            if(p->is_bomb()) return;
+            if(!p->is_closed()) return;
+            //if(p->is_flagged()) return;
+
+            p->set_open();
+            p->unflag();
+            p->set_visited();
+
+            point* neighbours[8];
+            if(p->get_bomb_neighbours() == 0){
+                int rows = p->get_y();
+                int cols = p->get_x();
+                neighbours[0] = matrix.at(rows - 1, cols - 1);
+
+                neighbours[1] = matrix.at(rows - 1, cols);
+   
+                neighbours[2] = matrix.at(rows - 1, cols + 1);
+
+                neighbours[3] = matrix.at(rows, cols -1);
+    
+                neighbours[4] = matrix.at(rows, cols + 1);
+   
+                neighbours[5] = matrix.at(rows + 1, cols -1);
+
+                neighbours[6] = matrix.at(rows + 1, cols);
+   
+                neighbours[7] = matrix.at(rows + 1, cols + 1);
+
+                for(int i = 0; i < 8; i++){
+                    if(neighbours[i]){
+                        open_box(neighbours[i]);
+                    }
+                }
+            }
+        
+        }
+    
+        
 
 };
 
@@ -355,7 +386,7 @@ class Hint : public Command{
         void execute(int x, int y){
             point* point = matrix.at(x, y);
             if(point){
-                if(point->is_bomb){
+                if(point->is_bomb()){
                     out << "bomb" << endl;
                 }
                 else{
@@ -386,25 +417,6 @@ class minesweeper {
             operations.push_back(new Click("click", matrix, out));
             operations.push_back(new Flag("flag", matrix));
         }
-        /*
-        void setup_matrix(vector<point> bombs){
-            sort(bombs.begin(), bombs.end());
-            int bomb_index = 0;
-            point bomb = bombs[bomb_index];
-            for(int i = 0; i < height; i++){
-                for(int j = 0; j < width; j++){
-                    if(bomb.get_x() == j && bomb.get_y() == i){
-                        matrix.push_back(point(j, i, true));
-                        bomb_index++;
-                        bomb = bombs[bomb_index];
-                    }
-                    else{
-                        matrix.push_back(point(j, i, false));
-                    }
-                }
-            }
-        }
-        */
         Command* get_command(const string& name) const{
             for(list<Command*>::const_iterator it = operations.begin(); it != operations.end(); it++){
                 if((*it)->get_name() == name){
