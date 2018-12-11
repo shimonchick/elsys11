@@ -291,14 +291,19 @@ class Click : public Command{
         void execute(int x, int y) override {
             point *point = matrix.at(x, y);
             if (point) {
-                if(point->is_bomb()) {
+                if(point->is_flagged()){
+                    point->unflag();
+                } 
+                else if(point->is_bomb()) {
                     throw GameOverException();
-                } else {
+                } 
+                else{
                     //out << "opening boxes:" << endl;
                     //point->is_closed = false;
                     //matrix.set_unvisited();
-                    point->unflag();
-                    this->open_box(point);
+                    //if(point->get_bomb_neighbours() == 0){
+                        this->open_box(point);
+                    //}
                 }
             }
         }
@@ -333,12 +338,12 @@ class Click : public Command{
         
         void open_box(point* p){
             if(p->is_visited()) return;
-            if(p->is_bomb()) return;
+            //if(p->is_bomb()) return;
             if(!p->is_closed()) return;
-            //if(p->is_flagged()) return;
+            if(p->is_flagged()) return;
 
             p->set_open();
-            p->unflag();
+            //p->unflag();
             p->set_visited();
 
             point* neighbours[8];
