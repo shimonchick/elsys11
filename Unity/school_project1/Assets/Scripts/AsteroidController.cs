@@ -25,32 +25,9 @@ public class AsteroidController : MonoBehaviour
 		{
 			for(int i = 0; i < spawnCount; i++){
 				GameObject asteroid = asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length)];
-				int cameraHeight = Camera.main.pixelHeight;
-				int cameraWidth = Camera.main.pixelWidth;
-				Vector3 asteroidPosition = new Vector3();
-				switch (Random.Range(0, 4))
-				{
-					case 0:
-						asteroidPosition.x = Random.Range(0, cameraWidth);
-						asteroidPosition.z = 0;
-						break;
-					case 1:
-						asteroidPosition.x = 0;
-						asteroidPosition.z = Random.Range(0, cameraHeight);
-						break;
-					case 2 :
-						asteroidPosition.x = Random.Range(0, cameraWidth);
-						asteroidPosition.z = cameraHeight;
-						break;
-					case 3:
-						asteroidPosition.x = cameraWidth;
-						asteroidPosition.z = Random.Range(0, cameraHeight);
-						break;
-				}
-                asteroidPosition = Camera.main.ScreenToWorldPoint(asteroidPosition);
-                asteroidPosition.y = 0;
-                asteroid.transform.position = asteroidPosition;
-
+                Vector3 screenPosition = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+               
+				asteroid.transform.position = new Vector3(Random.Range(0, screenPosition.x), 0, Random.Range(0, screenPosition.y));
 				asteroid.transform.LookAt(target);
 				
 				Instantiate(asteroid);
@@ -58,14 +35,15 @@ public class AsteroidController : MonoBehaviour
 				asteroids.Add(asteroid);
 
 				Debug.Log("Asteroid created");
-				timePassed = 0;
+				
 			}
-		}
+            timePassed = 0;
+        }
 		timePassed += Time.deltaTime;
 		foreach(GameObject a in asteroids)
 		{
             float maxDistance = Random.Range(1, 10) * asteroidSpeed * Time.deltaTime;
-			a.transform.position =Vector3.MoveTowards(a.transform.position, target.position, maxDistance);
+			a.transform.position = Vector3.MoveTowards(a.transform.position, target.position, maxDistance);
 		}
 	}
 }
