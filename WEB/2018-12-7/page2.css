@@ -1,0 +1,14 @@
+
+table{
+    border: 1px solid white;
+}
+td{
+
+    border: 1px solid white;
+    
+    color: white;
+}
+th{
+    border: 1px solid white;
+    color: white;
+}

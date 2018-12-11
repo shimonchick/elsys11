@@ -1,0 +1,18 @@
+<h1>Cats#new</h1>
+<p>Find me in app/views/person/new.html.erb</p>
+
+<%= form_for @person  do |f| %>
+  <%= f.label :first_name %>
+  <%= f.text_field :first_name %><br/>
+
+  <%= f.label :last_name %>
+  <%= f.text_field :last_name %><br/>
+  
+  <%= f.label :age %>
+  <%= f.number_field :age %><br/>
+  
+  <%= f.label :sex %>
+  <%= f.check_box :sex %><br/>
+  
+  <%= f.submit %>
+<% end %>
