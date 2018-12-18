@@ -4,7 +4,6 @@
 #include <vector>
 #include <iostream>
 #include <list>
-
 class Operation;
 
 class Calculator {
@@ -16,6 +15,7 @@ public:
 	double pop();
 	void run(std::istream& in, std::ostream& out);
 	void add_operation(Operation* op);
+	~Calculator();
 	
 };
 

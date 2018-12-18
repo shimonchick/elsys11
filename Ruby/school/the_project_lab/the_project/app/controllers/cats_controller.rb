@@ -1,6 +1,7 @@
 class CatsController < ApplicationController
   def new
     @cat = Cat.new
+    @people = Person.all
   end
 
   def create
@@ -10,6 +11,7 @@ class CatsController < ApplicationController
 
   def index
     @cats = Cat.all
+    
   end
 
   def show

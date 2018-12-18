@@ -126,13 +126,21 @@ private:
 
 public:
     Matrix(int width_param, int height_param, vector<point> &bombs)
-            : width(width_param), height(height_param) 
+            : width(width_param), height(height_param)
         {
         
         //allocate memory
-        matrix = new point*[height];
+        matrix = NULL;
+        while(!matrix){
+            
+            matrix = new (nothrow) point*[height];
+        }
         for(int rows = 0; rows < height; rows++){
-            point* row = new point[width];
+            point* row = NULL;
+            while(!row){
+               
+                row = new (nothrow) point[width];
+            }
             for(int cols = 0; cols < width; cols++){
                 point p(cols, rows);
                 row[cols] = p;

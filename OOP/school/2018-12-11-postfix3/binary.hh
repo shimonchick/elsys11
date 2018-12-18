@@ -7,33 +7,15 @@ class BinaryOperation : public Operation{
 
 	
 public:
-	BinaryOperation(const std::string& name, Calculator& calc)
-		: Operation(name, calc) {}
+	BinaryOperation(const std::string& name, Calculator& calc, double* num = NULL)
+		: Operation(name, calc), number(num) {}
 
 	void execute();
 
 protected:
+	double* number;
 	virtual double eval(double v1, double v2) = 0;
 	
-
-};
-
-class Plus : public BinaryOperation{
-    public:
-        Plus(Calculator& calc) : BinaryOperation("+", calc) {}
-    protected:
-        double eval(double v1, double v2){
-            return v1 + v2;
-        }
-
-};
-class Mul : public BinaryOperation{
-    public:
-        Mul(Calculator& calc) : BinaryOperation("*", calc) {}
-    protected:
-        double eval(double v1, double v2){
-            return v1 * v2;
-        }
 
 };
 

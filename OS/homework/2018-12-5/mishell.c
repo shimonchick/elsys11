@@ -9,21 +9,17 @@
 #define WORD_SIZE 200
 #define LINE_SIZE MAX_WORDS * WORD_SIZE
 // result should be freed manually
-char** parse_cmdline(const char* line){
-    char** result; 
+char** parse_cmdline(char* line){
+    char** result;
     result = malloc(sizeof(char*) * MAX_WORDS);
-    int size = MAX_WORDS;
-    for(int i = 0; i < size; i++){
+    int i = 0;
+    char* p = strtok(line, " ");
+    while(p != NULL){
         result[i] = malloc(sizeof(char) * WORD_SIZE);
-    }
-    char c;
-    int word_count = 0;
-    while(( c = getc(stdin)) != '\n'){
-        ungetc(c, stdin);
-        char word[WORD_SIZE];
-        scanf("%s", word);
-        strcpy(result[word_count], word);
-        printf("word read: %s", word);
+        result[i] = p;
+        printf("word:%s\n", result[i]);
+        i++;
+        p = strtok(NULL, " ");
     }
     return result;
 
@@ -32,8 +28,9 @@ char** parse_cmdline(const char* line){
 int main(int argc, char* argv[]){
     while(1){
 
-        char line[LINE_SIZE];
-        getline(line, 0, stdin); // dinamically alocates line;
+        char* line;
+        size_t length = 0;
+        getline(&line, &length, stdin); // dinamically alocates line;
         printf("line: %s", line);
         char** words = parse_cmdline(line);
         for(int i = 0; i < MAX_WORDS; i++){
@@ -57,7 +54,7 @@ int main(int argc, char* argv[]){
         for(int i = 0; i < MAX_WORDS; i++){
             free(words[i]);
         }
-        free(words);
+      free(line);
 
     }
     return 0;

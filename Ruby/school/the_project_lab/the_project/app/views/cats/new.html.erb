@@ -6,5 +6,10 @@
   <%= f.text_field :name %><br/>
   <%= f.label :weight %>
   <%= f.number_field :weight %><br/>
+  <%= f.select(:person_id) do %>
+    <% @people.each do |p| %>
+      <%= content_tag(:option, p.first_name, value: p.id) %>
+    <% end %>
+  <% end %>
   <%= f.submit %>
 <% end %>
