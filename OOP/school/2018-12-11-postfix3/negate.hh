@@ -1,5 +1,5 @@
 #ifndef NEGATE_HH__
-#define NEGATE_HH_
+#define NEGATE_HH__
 
 #include "unary.hh"
 

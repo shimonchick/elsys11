@@ -14,8 +14,6 @@ public:
 
 protected:
 	virtual double eval(double value) = 0;
-	
-
 };
 
 
