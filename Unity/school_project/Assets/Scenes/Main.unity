@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AsteroidsCount: 15
-  AsteroidPrefab: {fileID: 1577336602019996, guid: 150cdef8f70d6484fa0ef47585d68f4a,
+  AsteroidPrefab: {fileID: 1504693244130178, guid: 6e34e76cc8447e34f9e402bb1cd2bda5,
     type: 2}
   PlayableGridCellSize: 1.2
   PlayerSafeCells: 2
@@ -358,6 +358,10 @@ Prefab:
     - target: {fileID: 400000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
