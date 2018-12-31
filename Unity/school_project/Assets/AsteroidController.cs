@@ -9,7 +9,10 @@ public class AsteroidController : MonoBehaviour {
 
     [SerializeField]
     float scale_factor = 0.5f;
-	// Use this for initialization
+    // Use this for initialization
+
+    [SerializeField]
+    float minSize = 0.25f;
 	void Start () {
 		
 	}
@@ -28,21 +31,22 @@ public class AsteroidController : MonoBehaviour {
         }
         if(collision.gameObject.tag == "Projectile")
         {
-            
-            GameObject First = Instantiate(gameObject);
-            GameObject Second = Instantiate(gameObject);
+            if (gameObject.transform.localScale.x > minSize)
+            {
+                GameObject First = Instantiate(gameObject);
+                GameObject Second = Instantiate(gameObject);
 
-            First.transform.localScale = First.transform.localScale * scale_factor;
-            Second.transform.localScale = Second.transform.localScale * scale_factor;
+                First.transform.localScale = First.transform.localScale * scale_factor;
+                Second.transform.localScale = Second.transform.localScale * scale_factor;
 
-            First.transform.RotateAround(Vector3.forward, deflection_angle);
-            Second.transform.RotateAround(Vector3.forward, -deflection_angle);
+                First.transform.RotateAround(Vector3.forward, deflection_angle);
+                Second.transform.RotateAround(Vector3.forward, -deflection_angle);
 
-            Destroy(gameObject);
+                //Destroy(First, 5);
+                //Destroy(Second, 5);
+            }
             Destroy(collision.gameObject);
-            Destroy(First, 5);
-            Destroy(Second, 5);
-            
+            Destroy(gameObject);
 
         }
         

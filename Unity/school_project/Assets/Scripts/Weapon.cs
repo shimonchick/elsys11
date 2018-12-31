@@ -16,7 +16,8 @@ public class Weapon : MonoBehaviour {
 
         if (Time.time > NextShotTime)
         {
-            Instantiate(ProjectileToSpawn, SpawnPosition.position, SpawnPosition.rotation);
+            var newProjectile = Instantiate(ProjectileToSpawn, SpawnPosition.position, SpawnPosition.rotation);
+            Physics.IgnoreCollision(gameObject.GetComponent<Collider>(), newProjectile.GetComponent<Collider>());
             NextShotTime = Time.time + cooldown;
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AsteroidSpawner : MonoBehaviour {
+public class AsteroidSpawner: MonoBehaviour {
     protected class PlayableGridCell
     {
         public Bounds cellBounds;
@@ -120,7 +120,13 @@ public class AsteroidSpawner : MonoBehaviour {
         List<Vector3> asteroidPositions = FindFreePositions(AsteroidsCount);
         for (int i = 0; i < asteroidPositions.Count; ++i)
         {
-            Instantiate(AsteroidPrefab, asteroidPositions[i], Random.rotation);
+            GameObject asteroid = Instantiate(AsteroidPrefab, asteroidPositions[i], Random.rotation);
+            AsteroidMovementController asteroidMovementController = asteroid.GetComponent<AsteroidMovementController>();
+            if (asteroidMovementController)
+            {
+                asteroidMovementController.SetTarget(PlayerShip);
+            }
+
         }
     }
 

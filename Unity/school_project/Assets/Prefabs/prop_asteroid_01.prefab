@@ -24,9 +24,12 @@ GameObject:
   - component: {fileID: 54744261527990128}
   - component: {fileID: 136002402969188530}
   - component: {fileID: 114047696335523254}
+  - component: {fileID: 114271563832653010}
+  - component: {fileID: 114035143427911252}
+  - component: {fileID: 114485347675494366}
   m_Layer: 0
   m_Name: prop_asteroid_01
-  m_TagString: Untagged
+  m_TagString: Asteroid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37,8 +40,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1577336602019996}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -2.2601542, y: -0.2927637, z: 3.8960977}
+  m_LocalRotation: {x: 0.00000033675036, y: -0.8373121, z: 0.00000051573465, w: 0.5467253}
+  m_LocalPosition: {x: 0.48639578, y: 0, z: 3.9383776}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -101,6 +104,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
+--- !u!114 &114035143427911252
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1577336602019996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4c60c06903406943881fa0be6fe6c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectToSpawnOnDeath: {fileID: 1062156983296966, guid: 7bf732c5af0f2634ebc84c11f87bea0a,
+    type: 2}
+  DestructionFX: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
+  HitFX:
+  - {fileID: 100000, guid: e4e3908778e56664183247d243c7543d, type: 2}
+  - {fileID: 100000, guid: 48138717ca4e84a4cae6d822c341842a, type: 2}
+  - {fileID: 100000, guid: 84e4037f0ff2d7146baca8c756e353ac, type: 2}
+  SpawnDistance: 1.5
+  DeflectionAngle: 45
+  DestructionFXDuration: 0.9
+  HitFXDuration: 0.5
+  ScoreOnDeath: 5
+  DebugDraw: 0
+  hitsToKill: 3
+  hitScale: 2
 --- !u!114 &114047696335523254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -114,6 +143,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AsteroidSpeed: 2
   AsteroidAngularSpeed: 0.5
+  InitialDirection: {x: 0, y: 0, z: 0}
+--- !u!114 &114271563832653010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1577336602019996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa17c6ebf2afb1f4eb4505b651670389, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114485347675494366
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1577336602019996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2cfeb162fa247f41bed5d53ef9b2947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TagToHit: Player
 --- !u!136 &136002402969188530
 CapsuleCollider:
   m_ObjectHideFlags: 1

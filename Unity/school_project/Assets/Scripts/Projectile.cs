@@ -12,4 +12,5 @@ public class Projectile : MonoBehaviour {
         rigidbody.velocity = transform.forward * ProjectileVelocity;
         Destroy(gameObject, ProjectileDuration);
 	}
+
 }

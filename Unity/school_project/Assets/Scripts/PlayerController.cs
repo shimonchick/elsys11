@@ -1,20 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public float PlayerSpeed = 0.2f;
-
+	public string GameOverScene = "GameOver";
 
     void Start()
     {
         AsteroidSpawner.Instance.RegisterPlayer(gameObject);
+		GameStateController.Instance.OnPlayerSpawned ();
     }
 
     void OnDestroy()
     {
         AsteroidSpawner.Instance.UnregisterPlayer(gameObject);
+		GameStateController.Instance.OnPlayerDied ();
     }
 
     void FixedUpdate()
