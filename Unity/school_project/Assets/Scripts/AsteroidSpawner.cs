@@ -126,8 +126,8 @@ public class AsteroidSpawner: MonoBehaviour {
             {
                 asteroidMovementController.SetTarget(PlayerShip);
             }
-
         }
+        GameStateController.Instance.CurrentAsteroids = AsteroidsCount;
     }
 
     private List<Vector3> FindFreePositions(uint requestedPositionsCnt)

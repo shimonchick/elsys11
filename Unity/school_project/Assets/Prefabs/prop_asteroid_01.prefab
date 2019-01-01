@@ -23,10 +23,10 @@ GameObject:
   - component: {fileID: 23741183862377928}
   - component: {fileID: 54744261527990128}
   - component: {fileID: 136002402969188530}
-  - component: {fileID: 114047696335523254}
   - component: {fileID: 114271563832653010}
   - component: {fileID: 114035143427911252}
   - component: {fileID: 114485347675494366}
+  - component: {fileID: 114783408316102440}
   m_Layer: 0
   m_Name: prop_asteroid_01
   m_TagString: Asteroid
@@ -130,20 +130,6 @@ MonoBehaviour:
   DebugDraw: 0
   hitsToKill: 3
   hitScale: 2
---- !u!114 &114047696335523254
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1577336602019996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b28092abe5fe17b4d86efdeb6b50af3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AsteroidSpeed: 2
-  AsteroidAngularSpeed: 0.5
-  InitialDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &114271563832653010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -167,6 +153,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TagToHit: Player
+--- !u!114 &114783408316102440
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1577336602019996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b28092abe5fe17b4d86efdeb6b50af3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AsteroidSpeed: 2
+  AsteroidAngularSpeed: 2
+  InitialDirection: {x: 0, y: 0, z: 0}
+  followInterval: 2
 --- !u!136 &136002402969188530
 CapsuleCollider:
   m_ObjectHideFlags: 1

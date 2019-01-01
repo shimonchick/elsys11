@@ -34,11 +34,20 @@ public class HitReceiver : MonoBehaviour {
                 }
                 SpawnDeathObject(hitDirection, -DeflectionAngle);
                 SpawnDeathObject(hitDirection, DeflectionAngle);
+                if (gameObject.tag == "Asteroid")
+                {
+                    GameStateController.Instance.CurrentAsteroids += 2;
+                }
             }
             if (DestructionFX != null)
             {
                 GameObject spawnedFX = Instantiate(DestructionFX, transform.position, Random.rotation);
                 Destroy(spawnedFX, DestructionFXDuration);
+            }
+            
+            if(gameObject.tag == "Asteroid")
+            {
+                GameStateController.Instance.CurrentAsteroids -= 1;
             }
             GameStateController.Instance.IncrementScore(ScoreOnDeath);
             Destroy(gameObject);

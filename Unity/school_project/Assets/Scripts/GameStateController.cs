@@ -5,23 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class GameStateController : MonoBehaviour {
 
-	public float GameOverScreenDelay = 2.0f;
-	public string GameOverScene = "GameOver";
-	private uint CurrentScore = 0;
-	public static GameStateController Instance { get; private set; }
-	void Awake()
-	{
-		if (Instance == null)
-		{
-			Instance = this;
-			DontDestroyOnLoad (gameObject);
-		}
-		else
-		{
-			Destroy(gameObject);
-		}
-	}
+    public float GameOverScreenDelay = 2.0f;
+    public string GameOverScene = "GameOver";
+    private uint CurrentScore = 0;
+    public uint CurrentAsteroids;
+    public static GameStateController Instance { get; private set; }
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
+    
 	public void OnPlayerSpawned()
 	{
 		CurrentScore = 0;
@@ -46,4 +48,14 @@ public class GameStateController : MonoBehaviour {
 	{
 		SceneManager.LoadScene (GameOverScene);
 	}
+
+    private void Update()
+    {
+        if(CurrentAsteroids == 0)
+        {
+            Debug.Log("Boss battle");
+            //SceneManager.LoadScene(BossBattle);
+        }
+    }
+
 }
