@@ -13,9 +13,10 @@ public class HitReceiver : MonoBehaviour {
 	public uint ScoreOnDeath = 0;
 	public bool DebugDraw = false;
     public uint hitsToKill = 1;
-    public float hitScale = 2.0f; 
+    public float hitScale = 2.0f;
 
-    private uint currentHits = 0;
+    [HideInInspector]
+    public uint currentHits = 0;
 
 
 

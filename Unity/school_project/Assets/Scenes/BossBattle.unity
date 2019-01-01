@@ -132,15 +132,18 @@ MonoBehaviour:
   ObjectToSpawnOnDeath: {fileID: 0}
   DestructionFX: {fileID: 100008, guid: a93496017806b7740910df5fd946f306, type: 2}
   HitFX:
-  - {fileID: 100000, guid: 84e4037f0ff2d7146baca8c756e353ac, type: 2}
+  - {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
+  - {fileID: 100000, guid: 48138717ca4e84a4cae6d822c341842a, type: 2}
+  - {fileID: 100000, guid: e4e3908778e56664183247d243c7543d, type: 2}
   SpawnDistance: 2
   DeflectionAngle: 45
   DestructionFXDuration: 0.5
   HitFXDuration: 0.5
   ScoreOnDeath: 0
   DebugDraw: 0
-  hitsToKill: 3
-  hitScale: 2
+  hitsToKill: 50
+  hitScale: 4
+  currentHits: 0
 --- !u!114 &61616970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,8 +182,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 425710395}
   movementSpeed: 0
+  rageModeHPMissing: 0.7
   delay: 0.5
-  rotationTime: 0.25
+  rotationTime: 0.5
 --- !u!135 &61616973
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -272,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e921f6ad1909614c9d8f6e085b24d5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShotsPerSecond: 10
+  ShotsPerSecond: 5
   ProjectileToSpawn: {fileID: 100000, guid: 11e27c26ac87b40f0a62ec40d7261989, type: 2}
   SpawnPosition: {fileID: 1863202376}
 --- !u!4 &425710395 stripped
@@ -351,8 +355,9 @@ MonoBehaviour:
   HitFXDuration: 0.5
   ScoreOnDeath: 0
   DebugDraw: 0
-  hitsToKill: 50
+  hitsToKill: 5
   hitScale: 2
+  currentHits: 0
 --- !u!1001 &845384421
 Prefab:
   m_ObjectHideFlags: 0
@@ -374,7 +379,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.12
+      value: 3.99
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
       propertyPath: m_LocalRotation.x
@@ -398,7 +403,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Boss
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
       propertyPath: m_Name
@@ -827,7 +832,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -4.36
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4caf598f9f2f994419082e702b4d1d55, type: 3}
       propertyPath: m_LocalRotation.x

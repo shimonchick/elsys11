@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Asteroid
   - Projectile
+  - Boss
+  - EnemyProjectile
   layers:
   - Default
   - TransparentFX

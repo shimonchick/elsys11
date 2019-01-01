@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
         Quaternion newRotation = Quaternion.LookRotation(mousePositionWorldSpace - transform.position);
         Vector3 direction = new Vector3(horizontalInput, 0, verticalInput);
-        direction = transform.rotation * direction;
+        //direction = transform.rotation * direction;
         direction = direction * PlayerSpeed * Time.deltaTime;
 
         Rigidbody rb = GetComponent<Rigidbody>();

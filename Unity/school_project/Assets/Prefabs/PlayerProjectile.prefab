@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 136207494274945516}
   - component: {fileID: 114232162574929332}
   - component: {fileID: 82628548529106448}
+  - component: {fileID: 114749859940601188}
+  - component: {fileID: 114218203199518994}
   m_Layer: 0
   m_Name: PlayerProjectile
   m_TagString: Enemy
@@ -227,6 +229,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &114218203199518994
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2cfeb162fa247f41bed5d53ef9b2947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TagToHit: EnemyProjectile
 --- !u!114 &114232162574929332
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -252,6 +266,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectileDuration: 2
   ProjectileVelocity: 15
+--- !u!114 &114749859940601188
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2cfeb162fa247f41bed5d53ef9b2947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TagToHit: Boss
 --- !u!136 &136207494274945516
 CapsuleCollider:
   m_ObjectHideFlags: 1

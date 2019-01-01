@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 114092973685000650}
   - component: {fileID: 82072692501932928}
   - component: {fileID: 114841093157123724}
+  - component: {fileID: 114071734457197328}
   m_Layer: 0
   m_Name: EnemyProjectile
-  m_TagString: Untagged
+  m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -130,7 +131,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 36
   m_CollisionDetection: 0
 --- !u!82 &82072692501932928
 AudioSource:
@@ -227,6 +228,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &114071734457197328
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4c60c06903406943881fa0be6fe6c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectToSpawnOnDeath: {fileID: 0}
+  DestructionFX: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
+  HitFX: []
+  SpawnDistance: 2
+  DeflectionAngle: 45
+  DestructionFXDuration: 0.5
+  HitFXDuration: 0.5
+  ScoreOnDeath: 0
+  DebugDraw: 0
+  hitsToKill: 1
+  hitScale: 1
+  currentHits: 0
 --- !u!114 &114092973685000650
 MonoBehaviour:
   m_ObjectHideFlags: 1

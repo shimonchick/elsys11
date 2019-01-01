@@ -9,17 +9,22 @@ public class BossController : MonoBehaviour {
 
     [SerializeField]
     float movementSpeed = 0.1f;
+    [Range(0, 1)]
+    public float rageModeHPMissing = 0.7f;
 
     public float delay = 0.5f;
-    public float rotationTime = 0.5f;
+    public float rotationTime = 1.0f;
 
 
     private Weapon weapon;
     private float nextActionTime;
     private float currentRotationTime;
+    private HitReceiver hitReceiver;
+
     private void Start()
     {
         weapon = GetComponent<Weapon>();
+        hitReceiver = GetComponent<HitReceiver>();
         nextActionTime = Time.time;
         currentRotationTime = 0.0f;
     }
@@ -29,12 +34,17 @@ public class BossController : MonoBehaviour {
         //GetComponent<Rigidbody>().MovePosition(direction * movementSpeed * Time.deltaTime);
 
 
-        Quaternion newRotation = Quaternion.LookRotation(target.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, currentRotationTime);
-        currentRotationTime = currentRotationTime + Time.deltaTime;
-        currentRotationTime /= rotationTime;
-            
-        weapon.Shoot();
+        Quaternion newRotation = Quaternion.LookRotation(target.position - transform.position);
+        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, currentRotationTime);
+        currentRotationTime = Time.time * rotationTime % 1.0f;
+        if((float)hitReceiver.currentHits / (float)hitReceiver.hitsToKill < rageModeHPMissing)
+        {
+            weapon.Shoot();
+        }
+        else
+        {
+            weapon.Shoot3();
+        }
 
 	}
 }
