@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
     public float PlayerSpeed = 0.2f;
 	public string GameOverScene = "GameOver";
 
+    [SerializeField]
+    private List<Spell> spells;
+
     void Start()
     {
         AsteroidSpawner.Instance.RegisterPlayer(gameObject);
@@ -28,6 +31,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         UpdateShootInputs();
+        UpdateSpellInputs();
     }
 
     private void UpdateShootInputs()
@@ -35,6 +39,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButton("Fire1"))
         {
             GetComponent<Weapon>().Shoot();
+        }
+    }
+    private void UpdateSpellInputs()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CastSpell(0);
         }
     }
 
@@ -54,5 +65,14 @@ public class PlayerController : MonoBehaviour
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.MovePosition(transform.position + direction);
         rb.MoveRotation(newRotation);
+    }
+
+    public void CastSpell(int index)
+    {
+        if (index > spells.Count)
+        {
+            return;
+        }
+        spells[index].Cast();
     }
 }
