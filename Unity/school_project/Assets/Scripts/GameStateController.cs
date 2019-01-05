@@ -7,6 +7,8 @@ public class GameStateController : MonoBehaviour {
 
     public float GameOverScreenDelay = 2.0f;
     public string GameOverScene = "GameOver";
+    public string AsteroidScene = "Main";
+    public string BossBattleScene = "BossBattle";
     private uint CurrentScore = 0;
     public uint CurrentAsteroids;
     public static GameStateController Instance { get; private set; }
@@ -51,10 +53,10 @@ public class GameStateController : MonoBehaviour {
 
     private void Update()
     {
-        if(CurrentAsteroids == 0)
+        if(CurrentAsteroids == 0 && SceneManager.GetActiveScene().name == AsteroidScene)
         {
-            Debug.Log("Boss battle");
-            //SceneManager.LoadScene(BossBattle);
+            //Debug.Log("Boss battle");
+            SceneManager.LoadScene(BossBattleScene);
         }
     }
 

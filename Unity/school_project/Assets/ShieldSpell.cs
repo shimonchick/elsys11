@@ -16,8 +16,15 @@ public class ShieldSpell : Spell {
 
     private void Start()
     {
-        ship = GameObject.FindGameObjectWithTag("Player");
-        shield = GameObject.FindGameObjectWithTag("Shield");
+        ship = FindObjectOfType<PlayerController>().gameObject;
+        if (!ship)
+        {
+            Debug.Log("ship not found");
+        }
+        shield = FindObjectOfType<ShieldController>().gameObject;
+        if (!shield) {
+            Debug.Log("shield not found");
+        }
         shield.SetActive(false);
         
     }

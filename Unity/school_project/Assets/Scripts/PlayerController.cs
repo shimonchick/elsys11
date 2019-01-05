@@ -6,14 +6,17 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public float PlayerSpeed = 0.2f;
-	public string GameOverScene = "GameOver";
+	//public string GameOverScene = "GameOver";
 
     [SerializeField]
     private List<Spell> spells;
 
     void Start()
     {
-        AsteroidSpawner.Instance.RegisterPlayer(gameObject);
+        if (AsteroidSpawner.Instance)
+        {
+            AsteroidSpawner.Instance.RegisterPlayer(gameObject);
+        }
 		GameStateController.Instance.OnPlayerSpawned ();
     }
 
@@ -31,7 +34,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         UpdateShootInputs();
-        UpdateSpellInputs();
     }
 
     private void UpdateShootInputs()
@@ -41,13 +43,7 @@ public class PlayerController : MonoBehaviour
             GetComponent<Weapon>().Shoot();
         }
     }
-    private void UpdateSpellInputs()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            CastSpell(0);
-        }
-    }
+
 
     private void MoveShipWithPhysics()
     {
@@ -74,5 +70,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
         spells[index].Cast();
+        UIManager.Instance.Cooldown(spells[index].Cooldown, index);
     }
 }
