@@ -34,7 +34,7 @@ public class BossController : MonoBehaviour {
         //GetComponent<Rigidbody>().MovePosition(direction * movementSpeed * Time.deltaTime);
 
 
-        Quaternion newRotation = Quaternion.LookRotation(target.position - transform.position);
+
         transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, currentRotationTime);
         currentRotationTime = Time.time * rotationTime % 1.0f;
         if((float)hitReceiver.currentHits / (float)hitReceiver.hitsToKill < rageModeHPMissing)

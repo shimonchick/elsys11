@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public float PlayerSpeed = 0.2f;
+
+    [SerializeField]
+    private float changeMaterialTime = 2.0f;
 	//public string GameOverScene = "GameOver";
 
     [SerializeField]
@@ -20,11 +23,11 @@ public class PlayerController : MonoBehaviour
 		GameStateController.Instance.OnPlayerSpawned ();
     }
 
-    void OnDestroy()
-    {
-        AsteroidSpawner.Instance.UnregisterPlayer(gameObject);
-		GameStateController.Instance.OnPlayerDied ();
-    }
+    //void OnDestroy()
+    //{
+    //    AsteroidSpawner.Instance.UnregisterPlayer(gameObject);
+	//	GameStateController.Instance.OnPlayerDied ();
+    //}
 
     void FixedUpdate()
     {
@@ -71,5 +74,18 @@ public class PlayerController : MonoBehaviour
         }
         spells[index].Cast();
         UIManager.Instance.Cooldown(spells[index].Cooldown, index);
+    }
+
+    public void ChangeMaterial(Material material)
+    {
+        StartCoroutine(ChangeMaterial(material, changeMaterialTime));
+    }
+
+    public IEnumerator ChangeMaterial(Material material, float changeMaterialTime)
+    {
+        Debug.Log("changing material");
+        Material oldMaterial = GetComponent<MeshRenderer>().material;
+        yield return  new WaitForSeconds(changeMaterialTime);
+        GetComponent<MeshRenderer>().material = oldMaterial;
     }
 }

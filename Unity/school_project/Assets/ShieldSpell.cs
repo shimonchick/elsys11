@@ -6,42 +6,42 @@ using UnityEngine;
 public class ShieldSpell : Spell {
 
     
-    private GameObject shield;
-    private GameObject ship;
+    private ShieldController shield;
+    private PlayerController ship;
 
     [SerializeField]
     private Material shieldedShipMaterial;
 
     public float shieldTime = 2.0f;
 
-    private void Start()
+    protected float cooldown = 7.0f;
+
+
+    public override void Cast()
     {
-        ship = FindObjectOfType<PlayerController>().gameObject;
+        Debug.Log("casting shield");
+        ship = FindObjectOfType<PlayerController>();
         if (!ship)
         {
             Debug.Log("ship not found");
         }
-        shield = FindObjectOfType<ShieldController>().gameObject;
-        if (!shield) {
+        shield = FindObjectOfType<ShieldController>();
+        if (!shield)
+        {
             Debug.Log("shield not found");
         }
-        shield.SetActive(false);
-        
-    }
-    public override void Cast()
-    {
-        Material startMaterial = ship.GetComponent<MeshRenderer>().material;
-        ship.GetComponent<MeshRenderer>().material = shieldedShipMaterial;
-        StartCoroutine(ShowShield());
-        ship.GetComponent<MeshRenderer>().material = startMaterial;
+        shield.ShowShield();
+        ship.ChangeMaterial(shieldedShipMaterial, shieldTime);
 
     }
 
-    private IEnumerator ShowShield()
-    {
-        shield.SetActive(true);
-        yield return new WaitForSeconds(shieldTime);
-        shield.SetActive(false);
-
-    }
+//    private IEnumerator ShowShield()
+//    {
+//        shield.GetComponent<MeshRenderer>().enabled = true;
+//        shield.GetComponent<SphereCollider>().enabled = true;
+//        yield return new WaitForSeconds(shieldTime);
+//        shield.GetComponent<MeshRenderer>().enabled = false;
+//        shield.GetComponent<SphereCollider>().enabled = false;
+//
+//    }
 }
