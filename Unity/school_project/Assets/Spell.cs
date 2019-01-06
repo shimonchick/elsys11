@@ -7,6 +7,10 @@ public abstract class Spell : MonoBehaviour {
     public abstract void Cast();
     [SerializeField]
     protected float cooldown;
+
+    [HideInInspector]
+    public float currentCooldown = 0.0f;
+
     public float Cooldown
     {
         get

@@ -19,6 +19,7 @@ public class ShieldSpell : Spell {
 
     public override void Cast()
     {
+
         Debug.Log("casting shield");
         ship = FindObjectOfType<PlayerController>();
         if (!ship)
@@ -31,17 +32,20 @@ public class ShieldSpell : Spell {
             Debug.Log("shield not found");
         }
         shield.ShowShield();
-        ship.ChangeMaterial(shieldedShipMaterial, shieldTime);
+        ship.ChangeMaterial(shieldedShipMaterial);
+            
+
 
     }
 
-//    private IEnumerator ShowShield()
-//    {
-//        shield.GetComponent<MeshRenderer>().enabled = true;
-//        shield.GetComponent<SphereCollider>().enabled = true;
-//        yield return new WaitForSeconds(shieldTime);
-//        shield.GetComponent<MeshRenderer>().enabled = false;
-//        shield.GetComponent<SphereCollider>().enabled = false;
-//
-//    }
+
+    //    private IEnumerator ShowShield()
+    //    {
+    //        shield.GetComponent<MeshRenderer>().enabled = true;
+    //        shield.GetComponent<SphereCollider>().enabled = true;
+    //        yield return new WaitForSeconds(shieldTime);
+    //        shield.GetComponent<MeshRenderer>().enabled = false;
+    //        shield.GetComponent<SphereCollider>().enabled = false;
+    //
+    //    }
 }

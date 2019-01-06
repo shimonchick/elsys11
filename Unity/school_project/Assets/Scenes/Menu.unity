@@ -768,7 +768,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Player vs AI
+  m_Text: 'BossBattle
 
 '
 --- !u!222 &745493991
@@ -856,7 +856,7 @@ GameObject:
   - component: {fileID: 1109602542}
   - component: {fileID: 1109602541}
   m_Layer: 5
-  m_Name: PVAi
+  m_Name: BossBattle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

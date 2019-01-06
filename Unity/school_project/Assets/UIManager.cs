@@ -19,20 +19,19 @@ public class UIManager : MonoBehaviour
     //private Stat playerHealthBar;
     //private Stat enemyHealthBar;
 
-    private static UIManager instance;
+    public static UIManager Instance { get; private set; }
 
-    public static UIManager Instance
+    void Awake()
     {
-        get
+        if (Instance == null)
         {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<UIManager>();
-            }
-
-            return instance;
+            Instance = this;
+            //DontDestroyOnLoad(gameObject);
         }
-
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
@@ -70,10 +69,12 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("Spell clicked");
         buttons[buttonIndex].onClick.Invoke();
+ 
     }
 
     public IEnumerator Cooldown(float time, int index)
     {
+        Debug.Log("cooldown on spell with time:" + time + " and index:" + index);
         cooldownMask[index].enabled = true;
 
         float currentCooldown = time;

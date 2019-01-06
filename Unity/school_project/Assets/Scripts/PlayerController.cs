@@ -21,6 +21,10 @@ public class PlayerController : MonoBehaviour
             AsteroidSpawner.Instance.RegisterPlayer(gameObject);
         }
 		GameStateController.Instance.OnPlayerSpawned ();
+        foreach(Spell s in spells)
+        {
+            s.currentCooldown = 0;
+        }
     }
 
     //void OnDestroy()
@@ -37,6 +41,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         UpdateShootInputs();
+        ReduceSpellCooldowns();
     }
 
     private void UpdateShootInputs()
@@ -47,6 +52,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void ReduceSpellCooldowns()
+    {
+        foreach(Spell s in spells)
+        {
+            s.currentCooldown -= Time.deltaTime;
+        }
+    }
 
     private void MoveShipWithPhysics()
     {
@@ -72,19 +84,29 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        spells[index].Cast();
-        UIManager.Instance.Cooldown(spells[index].Cooldown, index);
+        if (spells[index].currentCooldown <= 0)
+        {
+            spells[index].Cast();
+            spells[index].currentCooldown = spells[index].Cooldown;
+            Debug.Log("spell cast");
+            StartCoroutine(UIManager.Instance.Cooldown(spells[index].Cooldown, index));
+            Debug.Log("should have shown cooldown");
+        }
+       
     }
 
     public void ChangeMaterial(Material material)
     {
+        Debug.Log("changing material");
         StartCoroutine(ChangeMaterial(material, changeMaterialTime));
     }
 
     public IEnumerator ChangeMaterial(Material material, float changeMaterialTime)
     {
         Debug.Log("changing material");
+
         Material oldMaterial = GetComponent<MeshRenderer>().material;
+        GetComponent<MeshRenderer>().material = material;
         yield return  new WaitForSeconds(changeMaterialTime);
         GetComponent<MeshRenderer>().material = oldMaterial;
     }

@@ -141,7 +141,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameOverScreenDelay: 0.75
+  WinScreenDelay: 2
   GameOverScene: GameOver
+  AsteroidScene: Main
+  BossBattleScene: BossBattle
+  WinScene: WinScene
+  CurrentAsteroids: 0
 --- !u!4 &130706967
 Transform:
   m_ObjectHideFlags: 0
@@ -172,7 +177,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerSpeed: 6
-  GameOverScene: GameOver
+  changeMaterialTime: 2
+  spells: []
 --- !u!114 &425710393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,11 +249,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjectToSpawnOnDeath: {fileID: 0}
   DestructionFX: {fileID: 100008, guid: a93496017806b7740910df5fd946f306, type: 2}
+  HitFX: []
   SpawnDistance: 2
   DeflectionAngle: 45
   DestructionFXDuration: 0.5
+  HitFXDuration: 0.5
   ScoreOnDeath: 0
   DebugDraw: 0
+  hitsToKill: 1
+  hitScale: 2
+  currentHits: 0
 --- !u!1 &882560085
 GameObject:
   m_ObjectHideFlags: 0

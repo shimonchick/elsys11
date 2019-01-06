@@ -33,10 +33,12 @@ public class BossController : MonoBehaviour {
         //Vector2 direction = Random.insideUnitCircle;
         //GetComponent<Rigidbody>().MovePosition(direction * movementSpeed * Time.deltaTime);
 
-
+        if (!target) return;
+        Quaternion newRotation = Quaternion.LookRotation(target.position - transform.position);
 
         transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, currentRotationTime);
         currentRotationTime = Time.time * rotationTime % 1.0f;
+        //TODO: make weapon shoot method abstract
         if((float)hitReceiver.currentHits / (float)hitReceiver.hitsToKill < rageModeHPMissing)
         {
             weapon.Shoot();

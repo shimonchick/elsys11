@@ -10,7 +10,7 @@ public class Weapon : MonoBehaviour {
 
     private float NextShotTime = 0.0f;
     
-    public void Shoot()
+    public virtual void Shoot()
     {
         float cooldown = 1 / ShotsPerSecond;
 
