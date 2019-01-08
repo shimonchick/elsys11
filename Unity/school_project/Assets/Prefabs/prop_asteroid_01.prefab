@@ -24,9 +24,9 @@ GameObject:
   - component: {fileID: 54744261527990128}
   - component: {fileID: 136002402969188530}
   - component: {fileID: 114271563832653010}
-  - component: {fileID: 114035143427911252}
   - component: {fileID: 114485347675494366}
   - component: {fileID: 114783408316102440}
+  - component: {fileID: 114842761913810476}
   m_Layer: 0
   m_Name: prop_asteroid_01
   m_TagString: Asteroid
@@ -103,33 +103,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 4
-  m_CollisionDetection: 0
---- !u!114 &114035143427911252
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1577336602019996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c60c06903406943881fa0be6fe6c17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectToSpawnOnDeath: {fileID: 1062156983296966, guid: 7bf732c5af0f2634ebc84c11f87bea0a,
-    type: 2}
-  DestructionFX: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
-  HitFX:
-  - {fileID: 100000, guid: e4e3908778e56664183247d243c7543d, type: 2}
-  - {fileID: 100000, guid: 48138717ca4e84a4cae6d822c341842a, type: 2}
-  - {fileID: 100000, guid: 84e4037f0ff2d7146baca8c756e353ac, type: 2}
-  SpawnDistance: 1.5
-  DeflectionAngle: 45
-  DestructionFXDuration: 0.9
-  HitFXDuration: 0.5
-  ScoreOnDeath: 5
-  DebugDraw: 0
-  hitsToKill: 3
-  hitScale: 2
+  m_CollisionDetection: 1
 --- !u!114 &114271563832653010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -152,7 +126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2cfeb162fa247f41bed5d53ef9b2947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TagToHit: Player
+  TagsToHit:
+  - Player
+  - Shield
 --- !u!114 &114783408316102440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -168,6 +144,33 @@ MonoBehaviour:
   AsteroidAngularSpeed: 2
   InitialDirection: {x: 0, y: 0, z: 0}
   followInterval: 2
+--- !u!114 &114842761913810476
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1577336602019996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ced01369092ec6498a2f23fa7f1da8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectToSpawnOnDeath: {fileID: 1062156983296966, guid: 7bf732c5af0f2634ebc84c11f87bea0a,
+    type: 2}
+  DestructionFX: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
+  HitFX:
+  - {fileID: 100000, guid: e4e3908778e56664183247d243c7543d, type: 2}
+  - {fileID: 100000, guid: 48138717ca4e84a4cae6d822c341842a, type: 2}
+  - {fileID: 100000, guid: 84e4037f0ff2d7146baca8c756e353ac, type: 2}
+  SpawnDistance: 1.5
+  DeflectionAngle: 45
+  DestructionFXDuration: 0.9
+  HitFXDuration: 0.5
+  ScoreOnDeath: 5
+  DebugDraw: 0
+  hitsToKill: 1
+  hitScale: 2
+  currentHits: 0
 --- !u!136 &136002402969188530
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -2,31 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossController : MonoBehaviour {
+public class BossController : Ship {
 
     [SerializeField]
     Transform target;
-
     [SerializeField]
-    float movementSpeed = 0.1f;
+    Weapon rageModeWeapon;
+    [SerializeField]
+    Material rageModeMaterial;
+    
     [Range(0, 1)]
     public float rageModeHPMissing = 0.7f;
 
-    public float delay = 0.5f;
-    public float rotationTime = 1.0f;
-
-
-    private Weapon weapon;
-    private float nextActionTime;
-    private float currentRotationTime;
     private HitReceiver hitReceiver;
+
+
 
     private void Start()
     {
-        weapon = GetComponent<Weapon>();
         hitReceiver = GetComponent<HitReceiver>();
-        nextActionTime = Time.time;
-        currentRotationTime = 0.0f;
+    }
+    private bool ShouldEnableRageMode()
+    {
+        if((float)hitReceiver.currentHits/ (float)hitReceiver.hitsToKill > rageModeHPMissing)
+        {
+            return true;
+        }
+        return false;
+    }
+    private void EnableRageMode()
+    {
+        Destroy(gameObject.GetComponent<Weapon>());
+        GetComponent<MeshRenderer>().material = rageModeMaterial;
+        Instantiate(rageModeWeapon, gameObject.transform);
+
     }
     private void Update () {
 
@@ -34,19 +43,15 @@ public class BossController : MonoBehaviour {
         //GetComponent<Rigidbody>().MovePosition(direction * movementSpeed * Time.deltaTime);
 
         if (!target) return;
-        Quaternion newRotation = Quaternion.LookRotation(target.position - transform.position);
+        LookTarget(target.position);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, currentRotationTime);
-        currentRotationTime = Time.time * rotationTime % 1.0f;
-        //TODO: make weapon shoot method abstract
-        if((float)hitReceiver.currentHits / (float)hitReceiver.hitsToKill < rageModeHPMissing)
+        if (ShouldEnableRageMode())
         {
-            weapon.Shoot();
+            EnableRageMode();
         }
-        else
-        {
-            weapon.Shoot3();
-        }
+
+        Shoot();
+
 
 	}
 }

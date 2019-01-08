@@ -18,9 +18,9 @@ public class PlayerController : Ship
     {
         if (AsteroidSpawner.Instance)
         {
-            AsteroidSpawner.Instance.RegisterPlayer(gameObject);
+            //AsteroidSpawner.Instance.RegisterPlayer(gameObject);
         }
-		GameStateController.Instance.OnPlayerSpawned ();
+		//GameStateController.Instance.RegisterPlayer (gameObject);
         foreach(Spell s in spells)
         {
             s.currentCooldown = 0;

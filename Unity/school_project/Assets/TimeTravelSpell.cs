@@ -12,15 +12,21 @@ public class TimeTravelSpell : Spell {
     [SerializeField]
     private float effectDuration = 1.0f;
 
+    [SerializeField]
+    private float effectScale = 5.0f;
+
+
     public override void Cast()
     {
         Debug.Log("casting time travel spell");
-        GameObject player = FindObjectOfType<PlayerController>().gameObject;
+        
         
         try
         {
-            player.transform.position = GameStateController.Instance.GetPositionAtTime(Time.time - timeBack);
-            GameObject effect = Instantiate(TravelFx, player.transform);
+            Caster.transform.position = GameStateController.Instance.GetPositionAtTime(Time.time - timeBack);
+            GameObject effect = Instantiate(TravelFx, Caster.transform);
+            effect.transform.localScale *= effectScale;
+            Debug.Log("effect created");
             Destroy(effect, effectDuration);
         }
         catch(System.Exception e)

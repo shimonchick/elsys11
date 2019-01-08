@@ -55,4 +55,6 @@ MonoBehaviour:
   currentCooldown: 5.6453853
   shieldedShipMaterial: {fileID: 2100000, guid: 1d46a17a95a444c08830612bc1146d1d,
     type: 2}
+  shieldPrefab: {fileID: 1914805309199574, guid: d6e9060aff8c44543a18bed08dcc9f96,
+    type: 2}
   shieldTime: 3.5

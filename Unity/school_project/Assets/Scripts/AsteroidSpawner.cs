@@ -10,6 +10,19 @@ public class AsteroidSpawner: MonoBehaviour {
     };
     public static AsteroidSpawner Instance { get; private set; }
 
+    public uint CurrentAsteroidCount
+    {
+        get
+        {
+            return currentAsteroidCount;
+        }
+
+        set
+        {
+            currentAsteroidCount = value;
+        }
+    }
+
     public uint AsteroidsCount = 5;
     public GameObject AsteroidPrefab;
     public float PlayableGridCellSize = 2.2f;
@@ -19,15 +32,13 @@ public class AsteroidSpawner: MonoBehaviour {
     GameObject PlayerShip = null;
     PlayableGridCell[,] PlayableAreaGrid = null;
     private bool IsSpawningFinished = false;
+    private uint currentAsteroidCount;
 
-    public void RegisterPlayer(GameObject playerObject)
-    {
-        PlayerShip = playerObject;
-    }
 
-    public void UnregisterPlayer(GameObject gameObject)
+
+    public void RegisterPlayer(GameObject playerToSet)
     {
-        PlayerShip = null;
+        PlayerShip = playerToSet;
     }
 
     void Awake()
@@ -50,6 +61,10 @@ public class AsteroidSpawner: MonoBehaviour {
             MarkPlayerSafeArea();
             SpawnNewAsteroids();
             IsSpawningFinished = true;
+        }
+        if(CurrentAsteroidCount == 0)
+        {
+            GameStateController.Instance.OnAsteroidsKilled();
         }
     }
 
@@ -127,7 +142,7 @@ public class AsteroidSpawner: MonoBehaviour {
                 asteroidMovementController.SetTarget(PlayerShip);
             }
         }
-        GameStateController.Instance.CurrentAsteroids = AsteroidsCount;
+        CurrentAsteroidCount = (uint)asteroidPositions.Count;
     }
 
     private List<Vector3> FindFreePositions(uint requestedPositionsCnt)

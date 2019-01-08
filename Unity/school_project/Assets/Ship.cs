@@ -15,10 +15,11 @@ public class Ship : MonoBehaviour {
     Weapon weapon;
     MovementComponent movementComponent;
     SpellComponent spellComponent;
-    private void Start()
+    protected void Start()
     {
         weapon = GetComponent<Weapon>();
         movementComponent = GetComponent<MovementComponent>();
+        spellComponent = GetComponent<SpellComponent>();
     }
 
     protected void Shoot()

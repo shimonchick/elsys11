@@ -5,12 +5,18 @@ using UnityEngine;
 public class PlayerShip : Ship {
 
 
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    private void Start()
+    {
+        base.Start();
+        GameStateController.Instance.RegisterPlayer(gameObject);
+        if(AsteroidSpawner.Instance != null)
+        {
+            AsteroidSpawner.Instance.RegisterPlayer(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+    }
+    // Update is called once per frame
+    private void Update () {
         UpdateShootInputs();
         UpdateSpellInputs();
     }
@@ -24,7 +30,7 @@ public class PlayerShip : Ship {
         Vector3 mousePositionScreenSpace = new Vector3(Input.mousePosition.x, Input.mousePosition.y, playerCameraOffset);
         Vector3 mousePositionWorldSpace = Camera.main.ScreenToWorldPoint(mousePositionScreenSpace);
 
-        Move(verticalInput, horizontalInput);
+        Move(horizontalInput, verticalInput);
         LookTarget(mousePositionWorldSpace);
 
 

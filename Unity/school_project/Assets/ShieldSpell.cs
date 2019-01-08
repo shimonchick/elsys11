@@ -32,8 +32,10 @@ public class ShieldSpell : Spell {
     {
         Material oldMaterial = Caster.GetComponent<MeshRenderer>().material;
         Caster.GetComponent<MeshRenderer>().material = shieldedShipMaterial;
+        Debug.Log("before waiting for seconds:" + shieldTime);
         yield return new WaitForSeconds(shieldTime);
-        GetComponent<MeshRenderer>().material = oldMaterial;
+        Debug.Log("should change material");
+        Caster.GetComponent<MeshRenderer>().material = oldMaterial;
     }
     private void CreateShield()
     {

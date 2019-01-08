@@ -8,13 +8,15 @@ public class GameStateController : MonoBehaviour {
     public float GameOverScreenDelay = 2.0f;
     public float WinScreenDelay = 2.0f;
     public string GameOverScene = "GameOver";
-    public string AsteroidScene = "Main";
+    public string AsteroidScene = "Asteroids";
     public string BossBattleScene = "BossBattle";
     public string WinScene = "WinScene";
+    public string MainMenuScene = "Menu";
     private uint CurrentScore = 0;
-    public uint CurrentAsteroids = 0;
+    public uint CurrentAsteroids;
     public static GameStateController Instance { get; private set; }
 
+    private string lastScene;
     
     private List<Vector4> playerPositionAtTime; // I could not find a generic hash table
     private GameObject player;
@@ -32,10 +34,19 @@ public class GameStateController : MonoBehaviour {
     }
     private void Start()
     {
-        player = FindObjectOfType<PlayerController>().gameObject;
+        
         playerPositionAtTime = new List<Vector4>();
     }
-
+    public void SetCurrentAsteroids(uint count)
+    {
+        CurrentAsteroids = count;
+    }
+    public void RegisterPlayer(GameObject playerToSet)
+    {
+        player = playerToSet;
+        CurrentScore = 0;
+    }
+    
     public void AddPlayerPosition(Vector3 position)
     {
         Vector4 positionAtTime = new Vector4(position.x, position.y, position.z, Time.time);
@@ -56,13 +67,10 @@ public class GameStateController : MonoBehaviour {
 
 
 
-    public void OnPlayerSpawned()
-	{
-		CurrentScore = 0;
-	}
 
 	public void OnPlayerDied()
 	{
+        player = null;
 		Invoke ("ShowGameOverScreen", GameOverScreenDelay);
 	}
 
@@ -75,7 +83,10 @@ public class GameStateController : MonoBehaviour {
     {
         Invoke("ShowWinScreen", WinScreenDelay);
     }
-
+    public void OnAsteroidsKilled()
+    {
+        LoadAsteroidScene();
+    }
 	public void IncrementScore(uint scoreToAdd)
 	{
 		CurrentScore += scoreToAdd;
@@ -86,24 +97,45 @@ public class GameStateController : MonoBehaviour {
 	}
 
 
-	void ShowGameOverScreen()
+	public void ShowGameOverScreen()
 	{
-		SceneManager.LoadScene (GameOverScene);
+        SceneManager.LoadScene(GameOverScene);
+        
+        
 	}
-    void ShowWinScreen()
+    public void ShowWinScreen()
     {
         SceneManager.LoadScene(WinScene);
+        
+    }
+    public void ShowMainMenuScreen()
+    {
+        SceneManager.LoadScene(MainMenuScene);
+        
+    }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    public void LoadAsteroidScene()
+    {
+        SceneManager.LoadScene(AsteroidScene);
+        lastScene = AsteroidScene;
+    }
+    public void LoadBossBattleScene()
+    {
+        SceneManager.LoadScene(BossBattleScene);
+        lastScene = BossBattleScene;
+    }
+    public void LoadLastScene()
+    {
+        SceneManager.LoadScene(lastScene);
     }
 
     private void Update()
     {
         if (!player) return;
         AddPlayerPosition(player.transform.position);
-        if (CurrentAsteroids == 0 && SceneManager.GetActiveScene().name == AsteroidScene)
-        {
-            //Debug.Log("Boss battle");
-            SceneManager.LoadScene(BossBattleScene);
-        }
         
     }
 

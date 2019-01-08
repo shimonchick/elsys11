@@ -52,7 +52,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 2.5
-  currentCooldown: -8.415118
+  currentCooldown: 0.30066687
   timeBack: 1.5
-  TravelFx: {fileID: 100000, guid: 84e4037f0ff2d7146baca8c756e353ac, type: 2}
+  TravelFx: {fileID: 100000, guid: 6d5757192829bfc4c972d81356cd3e3f, type: 2}
   effectDuration: 1
+  effectScale: 5

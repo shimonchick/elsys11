@@ -5,12 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Button[] buttons;
-    private KeyCode spell1, spell2, spell3, spell4;
-    private int buttonIndex;
 
     [SerializeField] private Image[] cooldownMask;
-    [SerializeField] private GameObject targetFrame;
 
     [SerializeField] private Text scoreLabel;
     [SerializeField] private string scoreText = "Score: {0}";
@@ -34,43 +30,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        spell1 = KeyCode.Alpha1;
-        spell2 = KeyCode.Alpha2;
-        spell3 = KeyCode.Alpha3;
-        spell4 = KeyCode.Alpha4;
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(spell1))
+        uint currentScore = 0;
+        var gameStateController = GameStateController.Instance;
+        if (gameStateController)
         {
-            SpellButtonOnClick(0);
+            currentScore = gameStateController.GetCurrentScore();
         }
-        if (Input.GetKeyDown(spell2))
-        {
-            SpellButtonOnClick(1);
-        }
-        if (Input.GetKeyDown(spell3))
-        {
-            SpellButtonOnClick(2);
-        }
-        if (Input.GetKeyDown(spell4))
-        {
-            SpellButtonOnClick(3);
-        }
-
+        scoreLabel.text = string.Format(scoreText, currentScore);
     }
 
-    private void SpellButtonOnClick(int buttonIndex)
-    {
-        Debug.Log("Spell clicked");
-        buttons[buttonIndex].onClick.Invoke();
- 
-    }
+
+
 
     public IEnumerator Cooldown(float time, int index)
     {

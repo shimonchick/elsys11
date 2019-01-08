@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 114778557123327074}
   - component: {fileID: 114181835524401716}
   - component: {fileID: 114124758667181710}
+  - component: {fileID: 114217717344016954}
   m_Layer: 0
   m_Name: prop_asteroid_smallest
   m_TagString: Asteroid
@@ -103,7 +104,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 4
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &114124758667181710
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -115,7 +116,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2cfeb162fa247f41bed5d53ef9b2947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TagToHit: Player
+  TagsToHit:
+  - Player
+  - Shield
 --- !u!114 &114181835524401716
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -129,11 +132,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjectToSpawnOnDeath: {fileID: 0}
   DestructionFX: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
+  HitFX: []
   SpawnDistance: 2
   DeflectionAngle: 45
   DestructionFXDuration: 0.9
+  HitFXDuration: 0.5
   ScoreOnDeath: 15
   DebugDraw: 0
+  hitsToKill: 1
+  hitScale: 2
+  currentHits: 0
+--- !u!114 &114217717344016954
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1638202596137362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ced01369092ec6498a2f23fa7f1da8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectToSpawnOnDeath: {fileID: 0}
+  DestructionFX: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
+  HitFX:
+  - {fileID: 100000, guid: e4e3908778e56664183247d243c7543d, type: 2}
+  - {fileID: 100000, guid: 48138717ca4e84a4cae6d822c341842a, type: 2}
+  - {fileID: 100000, guid: 84e4037f0ff2d7146baca8c756e353ac, type: 2}
+  SpawnDistance: 1.5
+  DeflectionAngle: 45
+  DestructionFXDuration: 0.9
+  HitFXDuration: 0.5
+  ScoreOnDeath: 5
+  DebugDraw: 0
+  hitsToKill: 1
+  hitScale: 2
+  currentHits: 0
 --- !u!114 &114552342372974604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -148,6 +182,7 @@ MonoBehaviour:
   AsteroidSpeed: 5
   AsteroidAngularSpeed: 0.5
   InitialDirection: {x: 0, y: 0, z: 0}
+  followInterval: 2
 --- !u!114 &114778557123327074
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 114215871120247160}
   - component: {fileID: 114348341456347106}
   - component: {fileID: 114551222100918546}
+  - component: {fileID: 114234736662227852}
   m_Layer: 0
   m_Name: prop_asteroid_small
   m_TagString: Asteroid
@@ -103,7 +104,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 4
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &114215871120247160
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -115,6 +116,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa17c6ebf2afb1f4eb4505b651670389, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114234736662227852
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1062156983296966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ced01369092ec6498a2f23fa7f1da8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectToSpawnOnDeath: {fileID: 1638202596137362, guid: b82afbdfc3010c84696527953e124408,
+    type: 2}
+  DestructionFX: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
+  HitFX:
+  - {fileID: 100000, guid: e4e3908778e56664183247d243c7543d, type: 2}
+  - {fileID: 100000, guid: 48138717ca4e84a4cae6d822c341842a, type: 2}
+  - {fileID: 100000, guid: 84e4037f0ff2d7146baca8c756e353ac, type: 2}
+  SpawnDistance: 1.5
+  DeflectionAngle: 45
+  DestructionFXDuration: 0.9
+  HitFXDuration: 0.5
+  ScoreOnDeath: 5
+  DebugDraw: 0
+  hitsToKill: 1
+  hitScale: 2
+  currentHits: 0
 --- !u!114 &114348341456347106
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -129,11 +157,16 @@ MonoBehaviour:
   ObjectToSpawnOnDeath: {fileID: 1638202596137362, guid: b82afbdfc3010c84696527953e124408,
     type: 2}
   DestructionFX: {fileID: 100004, guid: 2857e183f4cd3df4e9096e5b578bd32f, type: 2}
+  HitFX: []
   SpawnDistance: 1
   DeflectionAngle: 45
   DestructionFXDuration: 0.9
+  HitFXDuration: 0.5
   ScoreOnDeath: 10
   DebugDraw: 0
+  hitsToKill: 1
+  hitScale: 2
+  currentHits: 0
 --- !u!114 &114551222100918546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,7 +178,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2cfeb162fa247f41bed5d53ef9b2947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TagToHit: Player
+  TagsToHit:
+  - Player
+  - Shield
 --- !u!114 &114650584662402292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -160,6 +195,7 @@ MonoBehaviour:
   AsteroidSpeed: 4
   AsteroidAngularSpeed: 0.5
   InitialDirection: {x: 0, y: 0, z: 0}
+  followInterval: 2
 --- !u!136 &136362241876314564
 CapsuleCollider:
   m_ObjectHideFlags: 1

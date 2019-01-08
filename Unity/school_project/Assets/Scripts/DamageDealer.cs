@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DamageDealer : MonoBehaviour {
-	public string TagToHit = "Asteroid";
+    public List<string> TagsToHit;
 
 	void OnCollisionEnter(Collision collision)
 	{
-		if(collision.gameObject.CompareTag(TagToHit))
-		{
-			Destroy(gameObject);
-			HitReceiver hitReceiver = collision.gameObject.GetComponent<HitReceiver> ();
-			if (hitReceiver) {
-				hitReceiver.ReceiveHit (gameObject);
+        foreach (string TagToHit in TagsToHit)
+        {
+            if (collision.gameObject.CompareTag(TagToHit))
+            {
+                Destroy(gameObject);
+                HitReceiver hitReceiver = collision.gameObject.GetComponent<HitReceiver>();
+                if (hitReceiver)
+                {
+                    hitReceiver.ReceiveHit(gameObject);
 
-			} else {
-				Destroy (collision.gameObject);
-			}
+                }
+                else
+                {
+                    Destroy(collision.gameObject);
+                }
 
-		}
+            }
+        }
 	}
 }

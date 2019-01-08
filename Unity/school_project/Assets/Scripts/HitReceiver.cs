@@ -20,9 +20,9 @@ public class HitReceiver : MonoBehaviour {
 
 
 
-    public void ReceiveHit(GameObject damageDealer)
+    public virtual void ReceiveHit(GameObject damageDealer)
     {
-        //TODO: make it abstract so different classes have different logic on hit
+        
         currentHits++;
         if (currentHits == hitsToKill)
         {
@@ -36,28 +36,14 @@ public class HitReceiver : MonoBehaviour {
                 }
                 SpawnDeathObject(hitDirection, -DeflectionAngle);
                 SpawnDeathObject(hitDirection, DeflectionAngle);
-                if (gameObject.tag == "Asteroid")
-                {
-                    GameStateController.Instance.CurrentAsteroids += 2;
-                }
+
             }
             if (DestructionFX != null)
             {
                 GameObject spawnedFX = Instantiate(DestructionFX, transform.position, Random.rotation);
                 Destroy(spawnedFX, DestructionFXDuration);
             }
-            
-            if(gameObject.tag == "Asteroid")
-            {
-                GameStateController.Instance.CurrentAsteroids -= 1;
-            } else if(gameObject.tag == "Player")
-            {
-                GameStateController.Instance.OnPlayerDied();
-            }
-            else if(gameObject.tag == "Boss")
-            {
-                GameStateController.Instance.OnBossDied();
-            }
+
             GameStateController.Instance.IncrementScore(ScoreOnDeath);
             Destroy(gameObject);
         }

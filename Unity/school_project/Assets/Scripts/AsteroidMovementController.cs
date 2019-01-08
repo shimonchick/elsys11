@@ -39,12 +39,12 @@ public class AsteroidMovementController : MonoBehaviour {
     {
         if (!target)
         {
-            Debug.Log("target not set!");
+            
             return;
         }
         if(Time.time > timeUntillFollowingPlayer)
         {
-            Debug.Log("should follow player");
+            
             Vector3 targetPosition = target.transform.position;
             Vector3 direction = (targetPosition - transform.position).normalized;
             //direction = Vector3.RotateTowards(direction, Vector3.forward * Random.Range(-45, 45), float.MaxValue, float.MaxValue);
