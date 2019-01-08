@@ -12,7 +12,7 @@ public class PlayerShip : Ship {
 	// Update is called once per frame
 	void Update () {
         UpdateShootInputs();
-
+        UpdateSpellInputs();
     }
 
     private void FixedUpdate()
@@ -35,6 +35,26 @@ public class PlayerShip : Ship {
         {
             Shoot();
         }
+    }
+    //legacy dota spell buttons FTW
+    private void UpdateSpellInputs()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CastSpell(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CastSpell(1);
+        }
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    CastSpell(2);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    CastSpell(3);
+        //}
     }
 
 }

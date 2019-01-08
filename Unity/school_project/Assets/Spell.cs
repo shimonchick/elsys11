@@ -5,6 +5,8 @@ using UnityEngine;
 public abstract class Spell : MonoBehaviour {
 
     public abstract void Cast();
+
+    
     [SerializeField]
     protected float cooldown;
 
@@ -23,4 +25,19 @@ public abstract class Spell : MonoBehaviour {
             cooldown = value;
         }
     }
+
+    public GameObject Caster
+    {
+        get
+        {
+            return caster;
+        }
+
+        set
+        {
+            caster = value;
+        }
+    }
+
+    protected GameObject caster;
 }

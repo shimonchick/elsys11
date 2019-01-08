@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TimeTravelSpell : Spell {
 
-    protected float cooldown = 7.0f;
 
     [SerializeField]
     private float timeBack = 2.0f;

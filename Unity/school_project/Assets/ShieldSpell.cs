@@ -5,47 +5,40 @@ using UnityEngine;
 
 public class ShieldSpell : Spell {
 
-    
-    private ShieldController shield;
-    private PlayerController ship;
+  
+
 
     [SerializeField]
     private Material shieldedShipMaterial;
+    [SerializeField]
+    private GameObject shieldPrefab;
 
     public float shieldTime = 2.0f;
 
-    protected float cooldown = 7.0f;
+
 
 
     public override void Cast()
     {
+        //Start();
 
-        Debug.Log("casting shield");
-        ship = FindObjectOfType<PlayerController>();
-        if (!ship)
-        {
-            Debug.Log("ship not found");
-        }
-        shield = FindObjectOfType<ShieldController>();
-        if (!shield)
-        {
-            Debug.Log("shield not found");
-        }
-        shield.ShowShield();
-        ship.ChangeMaterial(shieldedShipMaterial);
-            
+        CreateShield();
+        StartCoroutine(ChangeMaterial());
 
 
     }
 
-
-    //    private IEnumerator ShowShield()
-    //    {
-    //        shield.GetComponent<MeshRenderer>().enabled = true;
-    //        shield.GetComponent<SphereCollider>().enabled = true;
-    //        yield return new WaitForSeconds(shieldTime);
-    //        shield.GetComponent<MeshRenderer>().enabled = false;
-    //        shield.GetComponent<SphereCollider>().enabled = false;
-    //
-    //    }
+    private IEnumerator ChangeMaterial()
+    {
+        Material oldMaterial = Caster.GetComponent<MeshRenderer>().material;
+        Caster.GetComponent<MeshRenderer>().material = shieldedShipMaterial;
+        yield return new WaitForSeconds(shieldTime);
+        GetComponent<MeshRenderer>().material = oldMaterial;
+    }
+    private void CreateShield()
+    {
+        GameObject shield = Instantiate(shieldPrefab, Caster.transform);
+        Destroy(shield, shieldTime);
+    
+    }
 }
