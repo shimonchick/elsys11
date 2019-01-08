@@ -12,7 +12,7 @@ public class GameStateController : MonoBehaviour {
     public string BossBattleScene = "BossBattle";
     public string WinScene = "WinScene";
     private uint CurrentScore = 0;
-    public uint CurrentAsteroids;
+    public uint CurrentAsteroids = 0;
     public static GameStateController Instance { get; private set; }
 
     

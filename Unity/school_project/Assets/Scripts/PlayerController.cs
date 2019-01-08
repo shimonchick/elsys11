@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Ship
 {
     public float PlayerSpeed = 0.2f;
 
     [SerializeField]
     private float changeMaterialTime = 2.0f;
 	//public string GameOverScene = "GameOver";
-
+        
     [SerializeField]
     private List<Spell> spells;
 

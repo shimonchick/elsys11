@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 7
+  currentCooldown: 5.6453853
   shieldedShipMaterial: {fileID: 2100000, guid: 1d46a17a95a444c08830612bc1146d1d,
     type: 2}
-  shieldTime: 2
+  shieldTime: 3.5
