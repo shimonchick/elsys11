@@ -1,5 +1,6 @@
 all:
-	gcc mishell.c
+	gcc -o shell -g shell.c
 clean:
 	rm -f *.o
-	rm -f *.out
+	rm shell
+	rm shell.zip
