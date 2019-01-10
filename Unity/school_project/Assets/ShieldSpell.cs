@@ -13,24 +13,18 @@ public class ShieldSpell : Spell {
     [SerializeField]
     private GameObject shieldPrefab;
 
-    public float shieldTime = 3.5f;
+    public float shieldTime = 2.0f;
 
 
 
-    private void Awake()
-    {
-        timeActive = shieldTime + 0.5f; // 
-    }
 
-
-    public override bool Cast()
+    public override void Cast()
     {
         //Start();
-        IEnumerator changeMaterial = ChangeMaterial();
-        StartCoroutine(changeMaterial);
+
         CreateShield();
-        
-        return true;
+        StartCoroutine(ChangeMaterial());
+
 
     }
 
@@ -42,7 +36,6 @@ public class ShieldSpell : Spell {
         yield return new WaitForSeconds(shieldTime);
         Debug.Log("should change material");
         Caster.GetComponent<MeshRenderer>().material = oldMaterial;
-
     }
     private void CreateShield()
     {

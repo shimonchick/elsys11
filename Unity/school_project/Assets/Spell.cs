@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Spell : MonoBehaviour {
 
-    public abstract bool Cast();
+    public abstract void Cast();
 
     
     [SerializeField]
@@ -12,8 +12,6 @@ public abstract class Spell : MonoBehaviour {
 
     [HideInInspector]
     public float currentCooldown = 0.0f;
-
-    public float timeActive;
 
     public float Cooldown
     {

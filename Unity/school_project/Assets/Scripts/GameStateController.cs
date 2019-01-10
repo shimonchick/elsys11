@@ -16,7 +16,7 @@ public class GameStateController : MonoBehaviour {
     public uint CurrentAsteroids;
     public static GameStateController Instance { get; private set; }
 
-    private string lastScene = "Asteroids";
+    private string lastScene;
     
     private List<Vector4> playerPositionAtTime; // I could not find a generic hash table
     private GameObject player;
@@ -52,7 +52,7 @@ public class GameStateController : MonoBehaviour {
         Vector4 positionAtTime = new Vector4(position.x, position.y, position.z, Time.time);
         playerPositionAtTime.Add(positionAtTime);
     }
-    public Vector3? GetPositionAtTime(float time)
+    public Vector3 GetPositionAtTime(float time)
     {
         for(int i = 0; i < playerPositionAtTime.Count; i++)
         {
@@ -62,7 +62,7 @@ public class GameStateController : MonoBehaviour {
                 return result;
             }
         }
-        return null;
+        throw new System.Exception();
     }
 
 
