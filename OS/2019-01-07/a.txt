@@ -1,0 +1,4 @@
+total 8.0K
+drwxrwxr-x  2 misho misho 4.0K Jan  7 08:20 [0m[00;34m.[0m/
+drwxrwxr-x 10 misho misho 4.0K Jan  7 08:19 [00;34m..[0m/
+-rw-rw-r--  1 misho misho    0 Jan  7 08:20 [00ma.txt[0m

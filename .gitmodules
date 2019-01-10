@@ -1,3 +1,6 @@
 [submodule "javascript/cloned"]
 	path = javascript/cloned
 	url = https://github.com/valiobojinov/tues2018.git
+[submodule "UbisoftUnityProject"]
+	path = UbisoftUnityProject
+	url = https://github.com/shimonchick/UbisoftUnityProject.git
