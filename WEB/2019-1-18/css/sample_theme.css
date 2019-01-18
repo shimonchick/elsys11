@@ -1,0 +1,127 @@
+body {
+    background-color: teal;
+    font-family: 'PT Sans Narrow', sans-serif
+}
+
+header.page-header {
+    width: 100%;
+    text-align: center
+}
+
+header.page-header span { 
+    font-family: 'Pacifico', cursive;
+    font-size: 2.4em;
+    color: white
+}
+
+nav.main-nav {
+    width: 70%;
+    margin: 40px auto 0
+}
+nav.main-nav span { 
+    border: 1px solid; 
+    padding: 5px 6px; 
+    font-size: 1.2em
+}
+nav.main-nav span i { margin-left: 5px }
+nav.main-nav span.diary-btn { 
+    background-color: dodgerblue;
+    border-color: dodgerblue
+}
+
+nav.main-nav span.add-student-btn { 
+    background-color: forestgreen;
+    border-color: forestgreen
+}
+
+section { margin-top: 20px; }
+section header { width: 70%; margin: 0 auto -1px }
+section header span.card { 
+    float: left;
+    min-height: 50px;
+    padding: 0 10px;
+    border: 1px solid #bbb;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    background-color: #d2d2d2; 
+    cursor: pointer
+}
+
+section header span.card:hover {
+    background-color: #b3c3c3
+}
+
+section header span.card.active { background-color: #bbcece; border-bottom-color: #bbcece }
+
+article { width: 70%; margin: 0 auto; }
+
+section#diary table {
+    margin: 0 auto;
+    width: 100%;
+    border-radius: 0 2px 2px
+}
+
+section#diary table, section#diary th, section#diary td {
+    border-bottom: 1px solid #9a9a9a;
+    border-collapse: collapse;
+    padding: 5px
+}
+
+section#diary table th.cell-w-2, td.cell-w-2 { width: 20% }
+section#diary table th.cell-w-3, td.cell-w-3 { width: 30% }
+section#diary table th.cell-w-1, td.cell-w-1 { width: 6% }
+section#diary table th.cell-w-4, td.cell-w-4 { width: 40% }
+section#diary table th.cell-w-5, td.cell-w-5 { width: 50% }
+section#diary table th.cell-w-6, td.cell-w-6 { width: 60% }
+section#diary table th.cell-w-7, td.cell-w-7 { width: 70% }
+section#diary table th.cell-w-8, td.cell-w-8 { width: 80% }
+section#diary table th.cell-w-9, td.cell-w-9 { width: 90% }
+section#diary table th.centered, td.centered { text-align: center }
+
+section#diary table thead { text-align: center }
+section#diary table tbody { text-align: center }
+
+section#diary table thead tr { background-color: #bbcece }
+section#diary table tbody tr { background-color: #fff }
+section#diary table tbody tr:nth-child(even) { background-color: #bbcece }
+
+section#add-student article {
+    background-color: #bbcece;
+    border: 1px solid #9a9a9a;
+    padding: 10px 0;
+}
+
+section#add-student article h3 { margin-left: 30px }
+
+section#add-student form { margin-left: 30px }
+
+section#add-student article input,
+  section#add-student article select { 
+    padding: 5px 6px;
+    font-size: 0.8em;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #7d7d7d;
+}
+
+section#add-student article label {
+    font-size: 1.0em;
+    font-weight: bold;
+    margin-right: 10px
+}
+
+section#add-student article .add-btn {
+    margin-top: 10px;
+    width: 100px;
+    height: 30px;
+    border: 1px solid;
+    background-color: darkolivegreen;
+    border-color: darkolivegreen;
+    /* border-bottom: 1px solid #7d7d7d;  */
+    padding: 5px 6px; 
+    font-size: 1em;
+}
+
+form#student-data div.tr { display: table-row }
+form#student-data div.td { display: table-cell }
