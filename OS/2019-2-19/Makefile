@@ -1,2 +1,2 @@
 all: 
-	gcc -pthread calculator.c
+	gcc -pthread primes.c -o primes
