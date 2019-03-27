@@ -1,4 +1,15 @@
 package org.elsys.cardgame.api;
 
-public class Game {
+public interface Game {
+
+    Deck getDeck();
+
+    Hand getDealtHand();
+
+    void setDealtHand(Hand hand);
+
+    void process(String command);
+
+    void addOperation(Operation operation);
 }
+

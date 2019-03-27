@@ -1,4 +1,9 @@
 package org.elsys.cardgame.api;
 
-public class Operation {
+public interface Operation {
+
+    String getName();
+
+    void execute();
+
 }
