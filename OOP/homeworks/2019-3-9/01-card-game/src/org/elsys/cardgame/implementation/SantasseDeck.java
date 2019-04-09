@@ -11,7 +11,10 @@ public class SantasseDeck extends BaseDeck {
     private static final int HAND_MAX_SIZE = 6;
     private static final List<Rank> allowedRanks = Arrays.asList(NINE, JACK, QUEEN, KING, TEN, ACE);
 
-    public SantasseDeck() {
+    public SantasseDeck(List<Card> allowedCards) {
+        super(allowedCards);
+    }
+    public SantasseDeck(){
         super();
     }
 

@@ -22,12 +22,19 @@ public abstract class BaseDeck implements Deck {
                 this.cards.add(c);
             }
         }
-        for(Card c : cards){
-            System.out.println(c.toString());
-        }
+//        for (Card c : cards) {
+//            System.out.println(c.toString());
+//        }
+    }
+
+    public BaseDeck(List<Card> cards) {
+        this.cards = cards;
+        //this.sort();
+        this.hand = new HandClass(new ArrayList<>());
     }
 
     protected abstract List<Rank> getAllowedRanks();
+
     protected abstract int getHandMaxSize();
 
     @Override
@@ -51,7 +58,8 @@ public abstract class BaseDeck implements Deck {
     }
 
     @Override
-    public Card topCard() {
+    public Card topCard()
+    {
         return cards.get(0);
     }
 
@@ -64,6 +72,7 @@ public abstract class BaseDeck implements Deck {
     public Card bottomCard() {
         return cards.get(cards.size() - 1);
     }
+
     @Override
     public Hand deal() {
         List<Card> cardsToDeal = new ArrayList<Card>();
@@ -78,19 +87,18 @@ public abstract class BaseDeck implements Deck {
 
         return this.hand;
     }
+
     @Override
     public void sort() {
         this.cards.sort(new Comparator<Card>() {
             @Override
             public int compare(Card c1, Card c2) {
                 if (c1.getSuit().compareTo(c2.getSuit()) == 0) {
-                    if(getAllowedRanks().indexOf(c1.getRank()) > getAllowedRanks().indexOf(c2.getRank())){
+                    if (getAllowedRanks().indexOf(c1.getRank()) > getAllowedRanks().indexOf(c2.getRank())) {
                         return 1;
-                    }
-                    else if(getAllowedRanks().indexOf(c1.getRank()) < getAllowedRanks().indexOf(c2.getRank())){
+                    } else if (getAllowedRanks().indexOf(c1.getRank()) < getAllowedRanks().indexOf(c2.getRank())) {
                         return -1;
-                    }
-                    else{
+                    } else {
                         return 0;
                     }
                 } else return c1.getSuit().compareTo(c2.getSuit());
@@ -98,6 +106,7 @@ public abstract class BaseDeck implements Deck {
         });
 
     }
+
     public void shuffle() {
         Collections.shuffle(this.cards);
     }

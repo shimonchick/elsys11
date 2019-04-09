@@ -17,6 +17,7 @@ public enum Suit {
 		return symbol;
 	}
 
+
 	@Override
 	public String toString() {
 		return symbol;

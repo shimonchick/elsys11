@@ -1,5 +1,6 @@
 package org.elsys.cardgame.implementation;
 
+import org.elsys.cardgame.api.Card;
 import org.elsys.cardgame.api.Rank;
 
 import java.util.Arrays;
@@ -11,7 +12,10 @@ public class BeloteDeck extends BaseDeck {
     private static final List<Rank> allowedRanks = Arrays.asList(SEVEN, EIGHT, NINE, JACK, QUEEN, KING,TEN, ACE);
     private static final int HAND_MAX_SIZE = 8;
 
-    public BeloteDeck() {
+    public BeloteDeck(List<Card> allowedCards) {
+        super(allowedCards);
+    }
+    public BeloteDeck(){
         super();
     }
 

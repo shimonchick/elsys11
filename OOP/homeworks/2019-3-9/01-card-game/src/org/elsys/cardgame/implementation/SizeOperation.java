@@ -1,4 +1,14 @@
 package org.elsys.cardgame.implementation;
 
-public class SizeOperation {
+import org.elsys.cardgame.api.Deck;
+
+public class SizeOperation extends BaseOperation {
+    public SizeOperation(String name, Deck deck) {
+        super(name, deck);
+    }
+
+    @Override
+    public void execute() {
+        this.deck.size();
+    }
 }

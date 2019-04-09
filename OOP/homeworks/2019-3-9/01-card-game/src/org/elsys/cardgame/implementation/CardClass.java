@@ -26,10 +26,7 @@ public class CardClass implements org.elsys.cardgame.api.Card {
 
     @Override
     public String toString() {
-        return "CardClass{" +
-                "suit=" + suit +
-                ", rank=" + rank +
-                '}';
+        return "" + suit + rank;
     }
 
     @Override

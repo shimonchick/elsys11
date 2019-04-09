@@ -1,5 +1,6 @@
 package org.elsys.cardgame.implementation;
 
+import org.elsys.cardgame.api.Card;
 import org.elsys.cardgame.api.Rank;
 
 import java.util.Arrays;
@@ -13,6 +14,9 @@ public class WarDeck extends BaseDeck {
 
     public WarDeck() {
         super();
+    }
+    public WarDeck(List<Card> cards){
+        super(cards);
     }
 
     @Override

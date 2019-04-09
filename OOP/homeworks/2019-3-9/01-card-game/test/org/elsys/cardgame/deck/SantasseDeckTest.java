@@ -23,7 +23,7 @@ public class SantasseDeckTest extends AbstractDeckTest {
 
 	@Override
 	public Deck defaultDeck() {
-		return DeckFactory.defaultSantaseDeck();
+		return DeckFactory.defaultSantasseDeck();
 	}
 
 	@Override

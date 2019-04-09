@@ -11,7 +11,7 @@ public class DeckFactory {
 		return new WarDeck();
 	}
 
-	public static Deck defaultSantaseDeck() {
+	public static Deck defaultSantasseDeck() {
 
 		return new SantasseDeck();
 	}

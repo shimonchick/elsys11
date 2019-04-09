@@ -8,16 +8,16 @@ import org.elsys.cardgame.factory.GameFactory;
 
 import java.util.List;
 
-public class SantaseDeckTest extends AbstractGameTest {
+public class SantasseGameTest extends AbstractGameTest {
 
     @Override
     protected Game createGame(List<Card> cards) {
-        return GameFactory.createSantaseGame(cards);
+        return GameFactory.createSantasseGame(cards);
     }
 
     @Override
     public Deck defaultDeck() {
-        return DeckFactory.defaultSantaseDeck();
+        return DeckFactory.defaultSantasseDeck();
     }
 
     @Override
