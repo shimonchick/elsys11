@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/starcraft3.dir/main.c.o CMakeFiles/starcraft3.dir/mineral.c.o CMakeFiles/starcraft3.dir/miner.c.o CMakeFiles/starcraft3.dir/marine.c.o CMakeFiles/starcraft3.dir/command_center.c.o CMakeFiles/starcraft3.dir/helper.c.o CMakeFiles/starcraft3.dir/error_handling.c.o  -o starcraft3 -lpthread 

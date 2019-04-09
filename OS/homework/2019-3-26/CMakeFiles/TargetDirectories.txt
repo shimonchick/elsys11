@@ -1,0 +1,3 @@
+/home/misho/Repos/elsys11/OS/homework/2019-3-26/CMakeFiles/rebuild_cache.dir
+/home/misho/Repos/elsys11/OS/homework/2019-3-26/CMakeFiles/starcraft3.dir
+/home/misho/Repos/elsys11/OS/homework/2019-3-26/CMakeFiles/edit_cache.dir

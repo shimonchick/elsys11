@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/starcraft.dir/main.c.o CMakeFiles/starcraft.dir/mineral.c.o CMakeFiles/starcraft.dir/miner.c.o CMakeFiles/starcraft.dir/marine.c.o CMakeFiles/starcraft.dir/command_center.c.o CMakeFiles/starcraft.dir/helper.c.o  -o starcraft -lpthread 
