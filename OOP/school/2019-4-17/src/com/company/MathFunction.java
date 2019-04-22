@@ -1,4 +1,6 @@
 package com.company;
 
-public class MathFunction {
+@FunctionalInterface
+public interface MathFunction {
+    double calculate(double x);
 }
