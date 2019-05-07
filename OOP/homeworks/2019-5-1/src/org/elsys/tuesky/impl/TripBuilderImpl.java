@@ -6,35 +6,37 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TripBuilderImpl implements TripBuilder {
-    private List<Flight> flightList;
-    private List<Layover> layoverList;
+    private List<TripUnit> subTrips;
+    private String lastDestination;
 
     public TripBuilderImpl() {
-        this.flightList = new LinkedList<>();
-        this.layoverList = new LinkedList<>();
+        this.subTrips = new LinkedList<>();
     }
 
     @Override
-    public TripBuilder then(TripUnit nextUnit) throws Exception {
-        if (nextUnit instanceof Flight) {
-            if(this.flightList.size() > 0){
-                this.flightList.get(this.flightList.size() - 1).setNext(nextUnit);
-                nextUnit.setPrev(this.flightList.get(this.flightList.size() - 1));
+    public TripBuilder then(TripUnit nextUnit) {
+        if(nextUnit instanceof Flight){
+            if(this.lastDestination!=null && !((Flight) nextUnit).getOrigin().equals(this.lastDestination)){
+                throw new RuntimeException();
             }
-            this.flightList.add((Flight) nextUnit);
-        } else {
-            if(this.layoverList.size() > 0){
-                this.layoverList.get(this.layoverList.size() - 1).setNext(nextUnit);
-                nextUnit.setPrev(this.layoverList.get(this.layoverList.size() - 1));
-            }
-
-            this.layoverList.add((Layover) nextUnit);
+            this.lastDestination = ((Flight) nextUnit).getDestination();
         }
+
+        if (this.subTrips.size() > 0) {
+            this.subTrips.get(this.subTrips.size() - 1).setNext(nextUnit);
+            nextUnit.setPrev(this.subTrips.get(this.subTrips.size() - 1));
+        } else {
+            nextUnit.setPrev(null);
+        }
+        this.subTrips.add(nextUnit);
+
         return this;
     }
 
     @Override
     public Trip end() {
-        return new TripImpl(this.flightList, this.layoverList);
+        this.subTrips.get(this.subTrips.size() - 1).setNext(null);
+        return new TripImpl(this.subTrips);
     }
+
 }

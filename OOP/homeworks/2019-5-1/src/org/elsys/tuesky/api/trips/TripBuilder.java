@@ -2,7 +2,7 @@ package org.elsys.tuesky.api.trips;
 
 public interface TripBuilder {
 
-    TripBuilder then(TripUnit nextUnit) throws Exception;
+    TripBuilder then(TripUnit nextUnit);
 
-    Trip end();
+    Trip end() throws Exception;
 }

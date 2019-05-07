@@ -10,7 +10,7 @@ public interface TripUnit {
 
     TripUnit getPrev();
 
-    void setNext(TripUnit next) throws Exception;
+    void setNext(TripUnit next) ;
 
-    void setPrev(TripUnit prev) throws Exception;
+    void setPrev(TripUnit prev) ;
 }

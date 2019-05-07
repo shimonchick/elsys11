@@ -1,7 +1,10 @@
 package org.elsys.tuesky.impl;
 
+import org.elsys.tuesky.api.planner.Query;
 import org.elsys.tuesky.api.planner.TripQuery;
+import org.elsys.tuesky.api.trips.Flight;
 import org.elsys.tuesky.api.trips.Trip;
+import org.elsys.tuesky.api.trips.TripUnit;
 
 import java.time.Duration;
 import java.util.List;
@@ -18,11 +21,13 @@ public class Trips {
     }
 
     public static TripQuery via(String via) {
-        return new TripQueryImpl(trip -> trip.getFlights()
-                .stream()
-                .filter(flight -> flight.getDestination().equals(via) || flight.getOrigin().equals(via))
-                .collect(Collectors.toList())
-                .size() > 0);
+
+        return new TripQueryImpl(trip -> {
+            return trip.getSubtrips().stream()
+                    .filter(tripUnit -> tripUnit instanceof Flight)
+                    .anyMatch(tripUnit -> ((Flight) tripUnit).getOrigin().equals(via)
+                            || ((Flight) tripUnit).getDestination().equals(via));
+        });
     }
 
     public static TripQuery withMaxDuration(Duration duration) {
