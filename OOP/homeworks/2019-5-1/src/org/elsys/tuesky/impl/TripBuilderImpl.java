@@ -22,12 +22,6 @@ public class TripBuilderImpl implements TripBuilder {
             this.lastDestination = ((Flight) nextUnit).getDestination();
         }
 
-        if (this.subTrips.size() > 0) {
-            this.subTrips.get(this.subTrips.size() - 1).setNext(nextUnit);
-            nextUnit.setPrev(this.subTrips.get(this.subTrips.size() - 1));
-        } else {
-            nextUnit.setPrev(null);
-        }
         this.subTrips.add(nextUnit);
 
         return this;
@@ -35,7 +29,6 @@ public class TripBuilderImpl implements TripBuilder {
 
     @Override
     public Trip end() {
-        this.subTrips.get(this.subTrips.size() - 1).setNext(null);
         return new TripImpl(this.subTrips);
     }
 

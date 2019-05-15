@@ -6,10 +6,10 @@ import org.elsys.tuesky.api.trips.TripUnit;
 import java.time.Duration;
 
 
-public class FlightImpl extends TripUnitImpl implements Flight {
+public final class FlightImpl extends TripUnitImpl implements Flight {
 
-    private String origin;
-    private String destination;
+    private final String origin;
+    private final String destination;
 
     public FlightImpl(String origin, String destination, Duration duration) {
         super(duration);

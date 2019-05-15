@@ -19,14 +19,17 @@ public class Trips {
     public static TripQuery withDestination(String destination) {
         return new TripQueryImpl(trip -> trip.getDestination().equals(destination));
     }
-
     public static TripQuery via(String via) {
 
         return new TripQueryImpl(trip -> {
-            return trip.getSubtrips().stream()
-                    .filter(tripUnit -> tripUnit instanceof Flight)
-                    .anyMatch(tripUnit -> ((Flight) tripUnit).getOrigin().equals(via)
-                            || ((Flight) tripUnit).getDestination().equals(via));
+            List<TripUnit> subtrips = trip.getSubtrips();
+            for(int i = 0; i < subtrips.size() -1; i++){
+                if(subtrips.get(i) instanceof Flight && ((Flight) subtrips.get(i)).getDestination().equals(via)){
+                    return true;
+                }
+            }
+            return false;
+
         });
     }
 

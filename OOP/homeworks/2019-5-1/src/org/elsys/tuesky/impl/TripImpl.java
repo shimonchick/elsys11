@@ -11,11 +11,24 @@ import java.util.*;
 
 public final class TripImpl implements Trip {
 
-    private List<TripUnit> subTrips;
-
+    private final List<TripUnit> subTrips;
+    private final Duration duration;
+    private final Duration layoverDuration;
+    private final int flightsCount;
 
     public TripImpl(List<TripUnit> subTrips) {
         this.subTrips = subTrips;
+
+        duration = subTrips.stream()
+                .map(TripUnit::getDuration)
+                .reduce(Duration.ZERO, Duration::plus);
+        layoverDuration = subTrips.stream()
+                .filter(tripUnit -> tripUnit instanceof Layover)
+                .map(TripUnit::getDuration)
+                .reduce(Duration.ZERO, Duration::plus);
+        flightsCount = (int) subTrips.stream()
+                .filter(tripUnit -> tripUnit instanceof Flight)
+                .count();
     }
 
     @Override
@@ -43,24 +56,17 @@ public final class TripImpl implements Trip {
 
     @Override
     public Duration getDuration() {
-        return this.subTrips.stream()
-                .map(tripUnit -> tripUnit.getDuration())
-                .reduce(Duration.ZERO, (duration, duration2) -> duration.plus(duration2));
+        return duration;
     }
 
     @Override
     public Duration getLayoverDuration() {
-        return this.subTrips.stream()
-                .filter(tripUnit -> tripUnit instanceof Layover)
-                .map(tripUnit -> tripUnit.getDuration())
-                .reduce(Duration.ZERO, (duration, duration2) -> duration.plus(duration2));
+        return layoverDuration;
     }
 
     @Override
     public int getFlightsCount() {
-            return (int)this.subTrips.stream()
-                    .filter(tripUnit -> tripUnit instanceof Flight)
-                    .count();
+        return flightsCount;
     }
 
     @Override
@@ -68,7 +74,6 @@ public final class TripImpl implements Trip {
         return query.matches(this);
     }
 
-    @Override
     public List<TripUnit> getSubtrips() {
         return this.subTrips;
     }

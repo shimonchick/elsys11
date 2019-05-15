@@ -7,9 +7,9 @@ import org.elsys.tuesky.api.trips.Trip;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PlannerImpl implements Planner {
+public final class PlannerImpl implements Planner {
 
-    List<Trip> trips;
+    private final List<Trip> trips;
 
     public PlannerImpl(List<Trip> trips) {
         this.trips = trips;

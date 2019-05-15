@@ -21,4 +21,6 @@ public interface Trip {
     boolean matches(TripQuery query);
 
     List<TripUnit> getSubtrips();
+
+//    List<TripUnit> getSubtrips();
 }
