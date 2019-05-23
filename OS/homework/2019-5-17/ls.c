@@ -10,16 +10,13 @@
 #include <grp.h>
 #include <time.h>
 #include <string.h>
-
-#define max(a,b) \
-({ __typeof__ (a) _a = (a); \
-   __typeof__ (b) _b = (b); \
- _a > _b ? _a : _b; })
+#include <errno.h>
 
 bool is_showing_hidden = false;
 bool is_verboose = false;
 bool is_recursive = false;
-
+bool is_size_printed = false;
+int total = 0;
 
 void print_filetype_letter(mode_t mode){
     char c;
@@ -53,75 +50,6 @@ void print_filetype_letter(mode_t mode){
     }
     printf("%c", c);
 }
-//void print_filetype_letter(mode_t mode)
-//{
-//    char c;
-//
-//    if (S_ISREG(mode))
-//        c = '-';
-//    else if (S_ISDIR(mode))
-//        c = 'd';
-//    else if (S_ISBLK(mode))
-//        c = 'b';
-//    else if (S_ISCHR(mode))
-//        c = 'c';
-//#ifdef S_ISFIFO
-//    else if (S_ISFIFO(mode))
-//        c = 'p';
-//#endif  /* S_ISFIFO */
-//
-//#ifdef S_ISLNK
-//    else if (S_ISLNK(mode))
-//        c = 'l';
-//#endif  /* S_ISLNK */
-//
-//#ifdef S_ISSOCK
-//    else if (S_ISSOCK(mode))
-//        c = 's';
-//#endif  /* S_ISSOCK */
-//
-//#ifdef S_ISDOOR
-//    else if (S_ISDOOR(mode))
-//        c = 'D';
-//#endif 
-//    else
-//        c = '?';
-//    
-//    printf("%c",c);
-//}
-//void print_filetype_letter(struct dirent* entry){
-//    char c;
-//    switch(entry->d_type){
-//        case DT_BLK:
-//            c = 'b';
-//            break;
-//        case DT_CHR:
-//            c = 'b';
-//            break;
-//        case DT_DIR:
-//            c = 'd'
-//            break;
-//        case DT_FIFO:
-//            c = 'p';
-//            break;
-//        case DT_LNK:
-//            c = 'l';
-//            break;
-//        case DT_REG:
-//            c = '-';
-//            break;
-//        case DT_SOCK:
-//            c = 's';
-//            break;
-//        case DT_UNKNOWN:
-//            c = '?';
-//            break;
-//        default:
-//            printf("Unsupported file type");
-//            exit(1);
-//    }
-//    pritnf("%c", c);
-//}
 void print_permissions(mode_t mode){
     char permissions[9];
 
@@ -157,86 +85,156 @@ void set_options(int argc, char* const argv[]){
                 exit(EXIT_FAILURE);
         }
     }
-    //if(optind >= argc){
-    //    fprintf(stderr, "Expected argument after options\n");
-    //}
-    printf("is_showing_hidden: %d, is_veboose: %d, is_recursive:%d\n", is_showing_hidden, is_verboose, is_recursive);
 }
 
 void print_file_information(const char* name){
     struct stat st;
-    //printf("file name: %s\n", name);
     stat(name, &st); 
     print_filetype_letter(st.st_mode);
     if(is_verboose){
         print_permissions(st.st_mode);
-        printf("%3ld", st.st_nlink);
+        printf(" %ld", st.st_nlink);
        
         struct passwd* pwd;
         
         pwd = getpwuid(st.st_uid);
-        printf("%s ", pwd->pw_name);
+        printf(" %s", pwd->pw_name);
        
         struct group* gr;
         
         gr = getgrgid(st.st_gid);
-        printf("%s", gr->gr_name);
+        printf(" %s", gr->gr_name);
 
-        printf("%10ld", st.st_size);
+        printf("%5ld", st.st_size);
         
-        struct tm* tm;
-        tm = localtime(&st.st_atime);
-        printf("%s", asctime(tm));
-    }
-    printf(" %s\n", name);
-}
+        struct tm tm_file, tm_now;
+        localtime_r(&st.st_mtime, &tm_file);
+        time_t now = time(NULL);
+        localtime_r(&now, &tm_now);
+        char time_str[64];
+        if(tm_file.tm_year == tm_now.tm_year){
+            strftime(time_str, sizeof(time_str), "%b %e %H:%M", &tm_file);
+        }else{
+            strftime(time_str, sizeof(time_str), "%b %e  %Y", &tm_file);    
+        }
+        printf(" %s", time_str);
 
-void print_directory(const char* name){
-    DIR *dir = opendir(name);
-    //TODO: error check opendir
-    struct dirent *entry;
-    if(is_recursive){
-        printf("%s:\n", name);
     }
-    while((entry = readdir(dir))) {
+    char* last = strrchr(name, '/');
+    if(last != NULL)
+        printf(" %s\n", last + 1);
+    else
+        printf(" %s\n", name);
+    //printf(" %s\n", name);
+}
+struct dirent* xreaddir(DIR* dir){
+    struct dirent* entry;
+    entry = readdir(dir);
+    if(errno != 0 && entry == NULL){
+        perror("readdir");
+        exit(1);
+        //return NULL;
+    }
+    return entry;
+}
+DIR* xopendir(const char* path){
+    DIR* dir = opendir(path);
+    if(dir == NULL && errno != 0){
+        perror("opendir");
+        exit(1);
+    }
+    return dir;
+}
+long dir_size(const char* path){
+    long size = 0;
+    printf("trying to open directory: %s\n", path);
+    DIR* dir = xopendir(path);
+    struct dirent* entry;
+    while((entry = xreaddir(dir))){
+        struct stat st;
+        stat(entry->d_name, &st);
+        if(S_ISDIR(st.st_mode)){ // recursively call for directories
+            if( !strcmp( ".", entry->d_name ) || !strcmp( "..", entry->d_name ) )
+                continue;
+            
+            char* dir_name = malloc(sizeof(char) * strlen(path) + sizeof(char) * strlen(entry->d_name) + 2);
+            strcpy(dir_name, path);
+            strcat(dir_name, "/");
+            strcat(dir_name, entry->d_name);
+
+            size += dir_size(dir_name);
+            free(dir_name);
+        }else{ // file
+            size += st.st_size;
+        }
+    }
+}
+void print_directory(const char* path){
+    DIR *dir = xopendir(path);
+    struct dirent *entry;
+    int capacity = 2;
+    int size = 0;
+    char (*recursive_dir_names)[4096] = malloc(sizeof(char) * 4096 * capacity);
+    while((entry = xreaddir(dir))) {
         if(entry->d_name[0] == '.' && !is_showing_hidden){
             continue;
         }
+        char dir_name[4096]; // max path size in unix 
+        strcpy(dir_name, path);
+        strcat(dir_name, "/");
+        strcat(dir_name, entry->d_name);
+       
         if(entry->d_type == DT_DIR && is_recursive){
-            printf("%s/%s:\n", name, entry->d_name);
-            char* dir_name = malloc(sizeof(char) * strlen(name) + sizeof(char) * strlen(entry->d_name) + 2);
-            strcpy(dir_name, name);
-            strcat(dir_name, "/");
-            strcat(dir_name, entry->d_name);
-            printf("printing directory: %s\n", dir_name);
-            print_directory(dir_name);
+            if(size == capacity){
+                capacity *= 2;
+                recursive_dir_names = realloc(recursive_dir_names, capacity * sizeof(char) * 4096);
+            }
+            strcpy(recursive_dir_names[size],dir_name);
+            size++;
         }
         else{
-            print_file_information(entry->d_name);
+            print_file_information(dir_name);
         }
     }
+    for(int i = 0; i < size; i++){
+        printf("%s:\n", recursive_dir_names[i]);
+        print_directory(recursive_dir_names[i]);
+
+    }
+    free(recursive_dir_names);
 
     closedir(dir);
 }
-
 int main(int argc, char* argv[]){
     
     set_options(argc, argv);
-    if(argc == 1){
-        argv[1] = malloc(sizeof(char) * 2);
-        argv[1] = ".";
+    if(argc == optind){
+        print_directory(".");
     }
-    for(int i = 1; i < max(argc, 2); i++){
-        if(argv[i][0] == '-'){ // skip arguments
-            continue;
+    else{
+        for(int i = 1; i < argc; i++){
+            if(argv[i][0] == '-'){ // skip arguments
+                continue;
+            }
+            struct stat st;
+            stat(argv[i], &st);
+            if((st.st_mode & S_IFMT)== S_IFDIR){
+                if(is_verboose && !is_size_printed){
+                    printf("total %ld", dir_size(argv[i]));
+                    is_size_printed = true;
+                }
+                if(argc > 2){
+                    if(i > 1){
+                        printf("\n");
+                    }
+                    printf("%s:\n", argv[i]);
+                }
+                print_directory(argv[i]);
+            }else {
+                print_file_information(argv[i]);
+            }
         }
-        struct stat st;
-        stat(argv[i], &st);
-        if(S_ISDIR(st.st_mode)){
-            print_directory(argv[i]);
-        }else {
-            print_file_information(argv[i]);
-        }
+
     }
     return 0;
 }
