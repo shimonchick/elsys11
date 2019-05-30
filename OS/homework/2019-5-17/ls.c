@@ -2,22 +2,27 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <pwd.h>
-#include <dirent.h>
 #include <stdbool.h>
 #include <getopt.h>
 #include <grp.h>
 #include <time.h>
 #include <string.h>
-#include <errno.h>
+#include <sys/stat.h>
+#include "error_handling.h"
+
 
 bool is_showing_hidden = false;
 bool is_verboose = false;
 bool is_recursive = false;
 bool is_size_printed = false;
-int total = 0;
 
+//--------------------------------------------
+// FUNCTION: print_filetype_letter
+// prints a letter that corresponds with the type of a file
+// PARAMETERS:
+// mode -> bit mask containing file type
+//----------------------------------------------
 void print_filetype_letter(mode_t mode){
     char c;
     
@@ -50,6 +55,12 @@ void print_filetype_letter(mode_t mode){
     }
     printf("%c", c);
 }
+//--------------------------------------------
+// FUNCTION: print_permissions
+// prints the permissions for a file
+// PARAMETERS:
+// mode -> bitmap containing the file permissions
+//----------------------------------------------
 void print_permissions(mode_t mode){
     char permissions[9];
 
@@ -65,6 +76,12 @@ void print_permissions(mode_t mode){
 
     printf("%s", permissions);
 }
+//--------------------------------------------
+// FUNCTION: set_options
+// reads the options from the argument vector and sets the appropriate flags 
+// PARAMETERS:
+// argc -> argument count; argv -> argument vector
+//----------------------------------------------
 void set_options(int argc, char* const argv[]){
     int opt;
     while((opt = getopt(argc, argv, "alR"))!= -1){
@@ -87,9 +104,15 @@ void set_options(int argc, char* const argv[]){
     }
 }
 
-void print_file_information(const char* name){
+//--------------------------------------------
+// FUNCTION: print_file_information
+// prints information about a file
+// PARAMETERS:
+// path -> path to file
+//----------------------------------------------
+void print_file_information(const char* path){
     struct stat st;
-    stat(name, &st); 
+    if(!xstat(path, &st)) return; 
     print_filetype_letter(st.st_mode);
     if(is_verboose){
         print_permissions(st.st_mode);
@@ -120,57 +143,39 @@ void print_file_information(const char* name){
         printf(" %s", time_str);
 
     }
-    char* last = strrchr(name, '/');
+    char* last = strrchr(path, '/');
     if(last != NULL)
         printf(" %s\n", last + 1);
     else
-        printf(" %s\n", name);
-    //printf(" %s\n", name);
+        printf(" %s\n", path);
 }
-struct dirent* xreaddir(DIR* dir){
-    struct dirent* entry;
-    entry = readdir(dir);
-    if(errno != 0 && entry == NULL){
-        perror("readdir");
-        exit(1);
-        //return NULL;
-    }
-    return entry;
-}
-DIR* xopendir(const char* path){
-    DIR* dir = opendir(path);
-    if(dir == NULL && errno != 0){
-        perror("opendir");
-        exit(1);
-    }
-    return dir;
-}
-long dir_size(const char* path){
-    long size = 0;
-    printf("trying to open directory: %s\n", path);
+//--------------------------------------------
+// FUNCTION: dir_size
+// get the size of a directory
+// PARAMETERS:
+// path -> path to the directory
+//----------------------------------------------
+int dir_size(const char* path){
+    int size = 0;
     DIR* dir = xopendir(path);
     struct dirent* entry;
     while((entry = xreaddir(dir))){
         struct stat st;
         stat(entry->d_name, &st);
-        if(S_ISDIR(st.st_mode)){ // recursively call for directories
-            if( !strcmp( ".", entry->d_name ) || !strcmp( "..", entry->d_name ) )
-                continue;
-            
-            char* dir_name = malloc(sizeof(char) * strlen(path) + sizeof(char) * strlen(entry->d_name) + 2);
-            strcpy(dir_name, path);
-            strcat(dir_name, "/");
-            strcat(dir_name, entry->d_name);
-
-            size += dir_size(dir_name);
-            free(dir_name);
-        }else{ // file
-            size += st.st_size;
-        }
+        size += st.st_size;
     }
+    xclosedir(dir);
+    return size;
 }
+//--------------------------------------------
+// FUNCTION: print_directory
+// prints the contents of a directory
+// PARAMETERS:
+// path -> path to the directory
+//----------------------------------------------
 void print_directory(const char* path){
     DIR *dir = xopendir(path);
+    if(dir == NULL) return;
     struct dirent *entry;
     int capacity = 2;
     int size = 0;
@@ -184,7 +189,7 @@ void print_directory(const char* path){
         strcat(dir_name, "/");
         strcat(dir_name, entry->d_name);
        
-        if(entry->d_type == DT_DIR && is_recursive){
+        if(entry->d_type == DT_DIR && is_recursive && entry->d_name[0]!='.'){
             if(size == capacity){
                 capacity *= 2;
                 recursive_dir_names = realloc(recursive_dir_names, capacity * sizeof(char) * 4096);
@@ -196,19 +201,25 @@ void print_directory(const char* path){
             print_file_information(dir_name);
         }
     }
-    for(int i = 0; i < size; i++){
-        printf("%s:\n", recursive_dir_names[i]);
-        print_directory(recursive_dir_names[i]);
+    if(is_recursive){
+        for(int i = 0; i < size; i++){
+            printf("\n%s:\n", recursive_dir_names[i]);
+            print_directory(recursive_dir_names[i]);
+        }
 
     }
     free(recursive_dir_names);
 
-    closedir(dir);
+    xclosedir(dir);
 }
 int main(int argc, char* argv[]){
-    
     set_options(argc, argv);
     if(argc == optind){
+        struct stat st;
+        if(!xstat(".", &st)) exit(1);
+        if(is_recursive){
+            printf(".:\n");
+        }
         print_directory(".");
     }
     else{
@@ -217,19 +228,22 @@ int main(int argc, char* argv[]){
                 continue;
             }
             struct stat st;
-            stat(argv[i], &st);
+            if(!xstat(argv[i], &st)) continue;
+
             if((st.st_mode & S_IFMT)== S_IFDIR){
                 if(is_verboose && !is_size_printed){
-                    printf("total %ld", dir_size(argv[i]));
+                    printf("total %d", dir_size(argv[i]));
                     is_size_printed = true;
                 }
                 if(argc > 2){
-                    if(i > 1){
-                        printf("\n");
-                    }
                     printf("%s:\n", argv[i]);
+
                 }
                 print_directory(argv[i]);
+                if(argc > 2 && i != argc - 1){
+                    printf("\n");
+
+                }
             }else {
                 print_file_information(argv[i]);
             }
