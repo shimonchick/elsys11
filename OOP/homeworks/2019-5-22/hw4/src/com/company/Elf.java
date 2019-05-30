@@ -24,6 +24,7 @@ public class Elf implements Runnable {
                 }
                 Thread.sleep(200);
                 System.out.println("Elf " + id + "got help from santaSem");
+                elf = Main.elfBarrier.await();
                 if (elf == LAST_ELF) {
                     Main.santaSem.release();
                     System.out.println("santa semaphore released");

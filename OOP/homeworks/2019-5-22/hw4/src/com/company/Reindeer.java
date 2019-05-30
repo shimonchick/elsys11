@@ -26,7 +26,7 @@ public class Reindeer implements Runnable {
                     System.out.println("Santa's attention acquired");
                 }
                 Main.sleigh.await();
-                System.out.println("Reindeer" + id + "Delivering toys");
+                System.out.println("Reindeer " + id + " Delivering toys");
                 Thread.sleep(100);
                 reindeeer = Main.sleigh.await(); //reindeer leaving the sleigh, we can use the same cyclic barrier
                 if (reindeeer == LAST_REINDEER) {
